@@ -37,19 +37,13 @@ public class AppUser {
 
     public AppUser() {
     }
-    public AppUser(Long id, String username, String password, String email) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.email = email;
-    }
 
     public AppUserResponseDto toDto() {
         return new AppUserResponseDto(
                 id,
                 username,
-                password,
-                email
+                email,
+                roles
         );
     }
 }

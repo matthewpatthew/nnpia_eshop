@@ -1,14 +1,26 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import React, {useState} from 'react'
 import './App.css'
+import ListAppUsersComponent from "./components/ListAppUsersComponent.jsx"
+import HeaderComponent from "./components/HeaderComponent.jsx"
+import {BrowserRouter, Route, Routes} from "react-router-dom"
+import AppUserComponent from "./components/AppUserComponent.jsx";
 
 function App() {
-  const [count, setCount] = useState(0)
 
-  return (
-    <h1>XD</h1>
-  )
+    return (
+        <>
+            <BrowserRouter>
+                <HeaderComponent/>
+                <Routes>
+                    {/*//http://localhost:3000*/}
+                    <Route path='/' element={<ListAppUsersComponent/>}></Route>
+                    {/*//http://localhost:3000/add-appuser*/}
+                    <Route path='/add-appuser' element={<AppUserComponent/>}></Route>
+                </Routes>
+
+            </BrowserRouter>
+        </>
+    )
 }
 
 export default App

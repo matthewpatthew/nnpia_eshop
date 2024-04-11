@@ -11,6 +11,7 @@ import upce.springeshopsem.dto.AppUserResponseInputDto;
 import upce.springeshopsem.entity.AppUser;
 import upce.springeshopsem.exception.ResourceNotFoundException;
 import upce.springeshopsem.service.AppUserService;
+import upce.springeshopsem.service.RoleService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,8 @@ import java.util.List;
 public class AppUserController {
 
     private final AppUserService appUserService;
+
+    private final RoleService roleService;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -58,20 +61,26 @@ public class AppUserController {
         return ResponseEntity.noContent().build();
     }
 
-    private AppUser toEntity(AppUserResponseInputDto appUserResponseInputDto) {
-        return new AppUser(
-                appUserResponseInputDto.getUsername(),
-                passwordEncoder.encode(appUserResponseInputDto.getPassword()),
-                appUserResponseInputDto.getEmail()
-        );
+    private AppUser toEntity(AppUserResponseInputDto dto) {
+        AppUser appUser = new AppUser();
+        appUser.setUsername(dto.getUsername());
+        appUser.setPassword(passwordEncoder.encode(dto.getPassword()));
+        appUser.setEmail(dto.getEmail());
+        if (dto.getRoleIds() != null) {
+            appUser.setRoles(roleService.findById(dto.getRoleIds()));
+        }
+        return appUser;
     }
 
-    private AppUser toEntity(Long id, AppUserResponseInputDto appUserResponseInputDto) {
-        return new AppUser(
-                id,
-                appUserResponseInputDto.getUsername(),
-                passwordEncoder.encode(appUserResponseInputDto.getPassword()),
-                appUserResponseInputDto.getEmail()
-        );
+    private AppUser toEntity(Long id, AppUserResponseInputDto dto) {
+        AppUser appUser = new AppUser();
+        appUser.setId(id);
+        appUser.setUsername(dto.getUsername());
+        appUser.setPassword(passwordEncoder.encode(dto.getPassword()));
+        appUser.setEmail(dto.getEmail());
+        if (dto.getRoleIds() != null) {
+            appUser.setRoles(roleService.findById(dto.getRoleIds()));
+        }
+        return appUser;
     }
 }
