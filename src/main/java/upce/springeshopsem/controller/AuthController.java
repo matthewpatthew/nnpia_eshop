@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 import upce.springeshopsem.model.LoginRequest;
 import upce.springeshopsem.model.LoginResponse;
 import upce.springeshopsem.service.AuthService;
-import upce.springeshopsem.service.impl.AuthServiceImpl;
 
 @RestController
 @RequestMapping("/auth")
@@ -22,6 +21,4 @@ public class AuthController {
     public LoginResponse login(@RequestBody @Validated LoginRequest request) {
         return authService.login(request.getUsername(), request.getPassword());
     }
-
-    //password reset
 }

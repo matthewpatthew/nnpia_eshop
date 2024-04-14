@@ -3,11 +3,16 @@ import {listAppUsers} from "../services/AppUserService.jsx";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {useNavigate} from "react-router-dom";
 
+
 const ListAppUsersComponent = () => {
 
     const [appUsers, setAppUsers] = useState([])
 
     const navigator = useNavigate()
+
+    const userData = JSON.parse(localStorage.getItem('userData'))
+    const userRole = userData?.a
+    const isAdmin = userRole?.includes('ROLE_ADMIN')
 
     useEffect(() => {
         listAppUsers().then((response) => {
@@ -15,6 +20,8 @@ const ListAppUsersComponent = () => {
         }).catch(error => {
             console.error(error)
         })
+
+
     }, []);
 
     function addNewAppUser() {
@@ -29,6 +36,7 @@ const ListAppUsersComponent = () => {
 
     }
 
+
     return (
         <div className='container'>
             <h2 className='text-center'>Users</h2>
@@ -37,7 +45,6 @@ const ListAppUsersComponent = () => {
                 <button className='btn btn-primary mb-2 me-4' onClick={deleteAppUser}>Delete AppUser</button>
                 <button className='btn btn-primary mb-2' onClick={updateAppUser}>Update AppUser</button>
             </div>
-
             <table className='table table-responsive table-bordered'>
                 <thead>
                 <tr>

@@ -23,22 +23,21 @@ public class AppUser {
 
     private String email;
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<Purchase> purchases = new ArrayList<>();
 
-    public AppUser(String username, String password, String email) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-    }
-
     public AppUser() {
     }
 
     public AppUserResponseDto toDto() {
+
         return new AppUserResponseDto(
                 id,
                 username,

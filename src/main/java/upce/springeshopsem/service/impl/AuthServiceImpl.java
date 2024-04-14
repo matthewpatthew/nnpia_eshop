@@ -1,7 +1,5 @@
 package upce.springeshopsem.service.impl;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,9 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import upce.springeshopsem.entity.AppUser;
 import upce.springeshopsem.model.LoginResponse;
-import upce.springeshopsem.model.RegistrationRequest;
 import upce.springeshopsem.security.JwtIssuer;
 import upce.springeshopsem.security.UserPrincipal;
 import upce.springeshopsem.service.AuthService;

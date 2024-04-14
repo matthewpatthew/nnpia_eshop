@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,12 +18,7 @@ public class Role {
     private String name;
 
     @JsonIgnore
-    @ManyToMany
-    @JoinTable(
-            name = "user_role",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @ManyToMany(mappedBy = "roles")
     private List<AppUser> users = new ArrayList<>();
-
 }
 

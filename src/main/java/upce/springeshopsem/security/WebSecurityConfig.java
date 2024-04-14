@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -23,6 +24,7 @@ import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
@@ -45,10 +47,10 @@ public class WebSecurityConfig {
                 .formLogin(Customizer.withDefaults())
                 .exceptionHandling(h -> h.authenticationEntryPoint(unauthorizedHandler))
                 .authorizeHttpRequests(registry -> registry
-                        .requestMatchers("auth/login").permitAll()
-                        // .requestMatchers(("admin/**")).hasRole("ADMIN")
-                        //.anyRequest().authenticated()
-                        .anyRequest().permitAll()
+                        .requestMatchers("/auth/login").permitAll()
+                        .requestMatchers("/products").permitAll()
+                        //.requestMatchers("/users/admin/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()
                 );
         return http.build();
     }

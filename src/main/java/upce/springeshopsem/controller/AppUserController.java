@@ -3,6 +3,7 @@ package upce.springeshopsem.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,7 @@ public class AppUserController {
 
     private final PasswordEncoder passwordEncoder;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("")
     public ResponseEntity<List<AppUserResponseDto>> findAll() {
         List<AppUser> appUsers = appUserService.findAll();
@@ -66,8 +68,8 @@ public class AppUserController {
         appUser.setUsername(dto.getUsername());
         appUser.setPassword(passwordEncoder.encode(dto.getPassword()));
         appUser.setEmail(dto.getEmail());
-        if (dto.getRoleIds() != null) {
-            appUser.setRoles(roleService.findById(dto.getRoleIds()));
+        if (dto.getRoles() != null) {
+            appUser.setRoles(roleService.findByIds(dto.getRoles()));
         }
         return appUser;
     }
@@ -78,8 +80,8 @@ public class AppUserController {
         appUser.setUsername(dto.getUsername());
         appUser.setPassword(passwordEncoder.encode(dto.getPassword()));
         appUser.setEmail(dto.getEmail());
-        if (dto.getRoleIds() != null) {
-            appUser.setRoles(roleService.findById(dto.getRoleIds()));
+        if (dto.getRoles() != null) {
+            appUser.setRoles(roleService.findByIds(dto.getRoles()));
         }
         return appUser;
     }

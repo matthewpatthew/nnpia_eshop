@@ -19,14 +19,12 @@ public class Purchase {
 
     private LocalDateTime expirationDate;
 
-    private int totalPrice;
+    private double totalPrice;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private AppUser user;
 
-    @ManyToMany(mappedBy = "purchases")
-    private List<Product> products = new ArrayList<>();
-
-
+    @OneToMany(mappedBy = "id")
+    private List<ProductPurchase> products = new ArrayList<>();
 }

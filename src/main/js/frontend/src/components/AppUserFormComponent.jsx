@@ -1,13 +1,24 @@
 import React, {useState, useEffect} from "react";
 import {listRoles} from "../services/RolesService.jsx";
+import {createAppUser} from "../services/AppUserService.jsx";
+import {useNavigate} from "react-router-dom";
 
 
-const AppUserComponent = () => {
+const AppUserFormComponent = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('Default123');
     const [roles, setRoles] = useState([]);
     const [allRoles, setAllRoles] = useState([]);
+
+    const [errors, setErrors] = useState({
+        username: '',
+        email: '',
+        password: '',
+        roles: ''
+    })
+
+    const navigator = useNavigate()
 
     useEffect(() => {
         listRoles().then((response) => {
@@ -17,10 +28,53 @@ const AppUserComponent = () => {
         })
     }, []);
 
-    function createAppUser(e) {
+    function saveAppUser(e) {
         e.preventDefault()
-        const AppUser = {username, email, password, roles}
-        console.log(AppUser)
+
+        if (validateForm()) {
+            const AppUser = {username, email, password, roles}
+
+            createAppUser(AppUser).then((response) => {
+                navigator('/appusers')
+            })
+        }
+    }
+
+    function validateForm() {
+        let valid = true;
+
+        const errorsCopy = {...errors}
+
+        if (username.trim()) {
+            errorsCopy.username = ''
+        } else {
+            errorsCopy.username = 'Username is required'
+            valid = false
+        }
+
+        if (email.trim()) {
+            errorsCopy.email = ''
+        } else {
+            errorsCopy.email = 'Email is required'
+            valid = false
+        }
+
+        if (password.trim()) {
+            errorsCopy.password = ''
+        } else {
+            errorsCopy.password = 'Password is required'
+            valid = false
+        }
+
+        if (roles.length > 0) {
+            errorsCopy.roles = ''
+        } else {
+            errorsCopy.roles = 'At least one role must be selected'
+            valid = false
+        }
+
+        setErrors(errorsCopy);
+        return valid
     }
 
     function toggleRole(roleId) {
@@ -42,23 +96,26 @@ const AppUserComponent = () => {
                         <div>
                             <label className='form-label'>Username</label>
                             <input type='text'
-                                   className='form-control'
+                                   className={`form-control ${errors.username ? 'is-invalid' : ''}`}
                                    value={username}
                                    onChange={(e) => setUsername((e.target.value))}/>
+                            {errors.username && <div className='invalid-feedback'>{errors.username}</div>}
                         </div>
                         <div className='mb-2'>
                             <label className='form-label'>Email</label>
                             <input type='text'
-                                   className='form-control'
+                                   className={`form-control ${errors.email ? 'is-invalid' : ''}`}
                                    value={email}
                                    onChange={(e) => setEmail((e.target.value))}/>
+                            {errors.email && <div className='invalid-feedback'>{errors.email}</div>}
                         </div>
                         <div className='mb-2'>
                             <label className='form-label'>Password</label>
                             <input type='text'
-                                   className='form-control'
-                                   value={email}
+                                   className={`form-control ${errors.password ? 'is-invalid' : ''}`}
+                                   value={password}
                                    onChange={(e) => setPassword((e.target.value))}/>
+                            {errors.password && <div className='invalid-feedback'>{errors.password}</div>}
                         </div>
                         <div className='mb-2'>
                             <label className='form-label'>Roles</label>
@@ -77,9 +134,10 @@ const AppUserComponent = () => {
                             ))}
                         </div>
                         <div>
-                            <button className='btn btn-primary mb-2 me-4' onClick={createAppUser}>Submit
+                            <button className='btn btn-primary mb-2 me-4' onClick={saveAppUser}>Submit
                             </button>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -87,4 +145,4 @@ const AppUserComponent = () => {
     )
 }
 
-export default AppUserComponent;
+export default AppUserFormComponent;

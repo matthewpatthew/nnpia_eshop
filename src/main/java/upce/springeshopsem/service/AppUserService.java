@@ -1,6 +1,5 @@
 package upce.springeshopsem.service;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import upce.springeshopsem.entity.AppUser;
 import upce.springeshopsem.exception.ResourceNotFoundException;
 

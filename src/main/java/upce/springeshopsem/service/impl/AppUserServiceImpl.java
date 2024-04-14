@@ -2,7 +2,6 @@ package upce.springeshopsem.service.impl;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import upce.springeshopsem.entity.AppUser;
 import upce.springeshopsem.exception.ResourceNotFoundException;

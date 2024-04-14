@@ -13,5 +13,4 @@ public class AppUserResponseDto {
     private String username;
     private String email;
     private List<Role> roles;
-
 }
