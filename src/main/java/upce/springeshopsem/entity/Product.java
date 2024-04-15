@@ -5,6 +5,7 @@ import lombok.Data;
 import upce.springeshopsem.dto.ProductResponseDto;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @Entity
@@ -31,11 +32,11 @@ public class Product {
     }
 
     public ProductResponseDto toDto() {
-
+        String base64Image = Base64.getEncoder().encodeToString(image);
         return new ProductResponseDto(
                 id,
                 name,
-                image,
+                base64Image,
                 price,
                 description
         );

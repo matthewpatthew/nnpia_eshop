@@ -12,6 +12,7 @@ import upce.springeshopsem.exception.ResourceNotFoundException;
 import upce.springeshopsem.service.ProductService;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -60,7 +61,9 @@ public class ProductController {
         product.setName(dto.getName());
         product.setDescription(dto.getDescription());
         product.setPrice(dto.getPrice());
-        product.setImage(dto.getImage());
+        String encodedImage = dto.getImage();
+        byte[] image = Base64.getDecoder().decode(encodedImage);
+        product.setImage(image);
         return product;
     }
 
@@ -70,7 +73,9 @@ public class ProductController {
         product.setName(dto.getName());
         product.setDescription(dto.getDescription());
         product.setPrice(dto.getPrice());
-        product.setImage(dto.getImage());
+        String encodedImage = dto.getImage();
+        byte[] image = Base64.getDecoder().decode(encodedImage);
+        product.setImage(image);
         return product;
     }
 }

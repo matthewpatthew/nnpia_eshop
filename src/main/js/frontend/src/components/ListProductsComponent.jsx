@@ -12,10 +12,6 @@ const ListProductsComponent= () => {
 
     const navigator = useNavigate()
 
-    const userData = JSON.parse(localStorage.getItem('userData'))
-    const userRole = userData.a
-    const isAdmin = userRole.includes('ROLE_ADMIN')
-
     const [products] = useState([
         {
             "id": 1,
@@ -39,14 +35,14 @@ const ListProductsComponent= () => {
             "description": "Bezdrátová sluchátka s vynikajícím zvukem a pohodlným nošením."
         },
         {
-            "id": 3,
+            "id": 4,
             "name": "Sluchátka DEF",
             "image": img1,
             "price": "$199",
             "description": "Bezdrátová sluchátka s vynikajícím zvukem a pohodlným nošením."
         },
         {
-            "id": 3,
+            "id": 5,
             "name": "Sluchátka DEF",
             "image": img1,
             "price": "$199",

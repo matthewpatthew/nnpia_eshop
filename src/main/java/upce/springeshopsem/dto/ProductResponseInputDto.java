@@ -7,7 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class ProductResponseInputDto {
     private String name;
-    private byte[] image;
+    private String image;
     private String price;
     private String description;
 }

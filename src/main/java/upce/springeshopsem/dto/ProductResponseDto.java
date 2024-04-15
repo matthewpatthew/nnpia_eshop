@@ -8,7 +8,7 @@ import lombok.Data;
 public class ProductResponseDto {
     private Long id;
     private String name;
-    private byte[] image;
+    private String image;
     private String price;
     private String description;
 }

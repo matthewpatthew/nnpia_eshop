@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/users/admin")
+@RequestMapping("/users")
 public class AppUserController {
 
     private final AppUserService appUserService;
@@ -39,24 +39,27 @@ public class AppUserController {
         return ResponseEntity.ok(appUserDtoResponse);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<AppUserResponseDto> findById(@PathVariable Long id) throws ResourceNotFoundException {
         AppUser appUser = appUserService.findById(id);
         return ResponseEntity.ok(appUser.toDto());
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("")
     public ResponseEntity<AppUserResponseDto> create(@RequestBody @Validated AppUserResponseInputDto appUserResponseInputDto) {
         AppUser appUser = appUserService.create(toEntity(appUserResponseInputDto));
         return new ResponseEntity<>(appUser.toDto(), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<AppUserResponseDto> update(@PathVariable Long id, @RequestBody @Validated AppUserResponseInputDto appUserResponseInputDto) {
         AppUser appUser = appUserService.update(toEntity(id, appUserResponseInputDto));
         return ResponseEntity.ok(appUser.toDto());
     }
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) throws ResourceNotFoundException {
         appUserService.delete(id);

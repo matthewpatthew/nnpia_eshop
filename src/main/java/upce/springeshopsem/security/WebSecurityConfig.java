@@ -42,14 +42,13 @@ public class WebSecurityConfig {
                 //.cors(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
-                .securityMatcher("/**") //config works on the entire app (/api/**)
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .formLogin(Customizer.withDefaults())
+                .formLogin(AbstractHttpConfigurer::disable)
                 .exceptionHandling(h -> h.authenticationEntryPoint(unauthorizedHandler))
+                .securityMatcher("/**")
                 .authorizeHttpRequests(registry -> registry
-                        .requestMatchers("/auth/login").permitAll()
                         .requestMatchers("/products").permitAll()
-                        //.requestMatchers("/users/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/auth/login").permitAll()
                         .anyRequest().authenticated()
                 );
         return http.build();

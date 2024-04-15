@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {listAppUsers} from "../services/AppUserService.jsx";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {useNavigate} from "react-router-dom";
@@ -7,18 +7,17 @@ import {useNavigate} from "react-router-dom";
 const ListAppUsersComponent = () => {
 
     const [appUsers, setAppUsers] = useState([])
-
     const navigator = useNavigate()
-
-    const userData = JSON.parse(localStorage.getItem('userData'))
-    const userRole = userData?.a
-    const isAdmin = userRole?.includes('ROLE_ADMIN')
 
     useEffect(() => {
         listAppUsers().then((response) => {
+            console.log(response)
             setAppUsers(response.data)
         }).catch(error => {
-            console.error(error)
+            //console.error(error)
+            if (error.response && error.response.status === 403) {
+                navigator('/login');
+            }
         })
 
 
