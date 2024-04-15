@@ -8,7 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.filter.OncePerRequestFilter;
+import upce.springeshopsem.exception.ResourceNotFoundException;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -23,11 +25,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        extractTokenFromRequest(request)
-                .map(jwtDecoder::decode)
-                .map(jwtPrincipalConverter::convert)
-                .map(UserPrincipalAuthenticationToken::new)
-                .ifPresent(SecurityContextHolder.getContext()::setAuthentication);
+            extractTokenFromRequest(request)
+                    .map(jwtDecoder::decode)
+                    .map(jwtPrincipalConverter::convert)
+                    .map(UserPrincipalAuthenticationToken::new)
+                    .ifPresent(SecurityContextHolder.getContext()::setAuthentication);
 
         filterChain.doFilter(request, response);
     }

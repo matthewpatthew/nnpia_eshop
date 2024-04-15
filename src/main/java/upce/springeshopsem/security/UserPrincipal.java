@@ -12,8 +12,6 @@ import java.util.Collection;
 @Getter
 public class UserPrincipal implements UserDetails {
 
-    //change return values to true
-
     private final long userId;
 
     private final String username;
@@ -22,7 +20,6 @@ public class UserPrincipal implements UserDetails {
     private final String password;
 
     private final Collection<? extends GrantedAuthority> authorities;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;

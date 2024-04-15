@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/users")
+@RequestMapping("/appusers")
 public class AppUserController {
 
     private final AppUserService appUserService;

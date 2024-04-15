@@ -14,8 +14,13 @@ import java.io.IOException;
 public class UnauthorizedHandler implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
+        String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader != null) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, authException.getMessage());
+        }else{
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
+        }
 
-        log.debug("Pre-authenticated entry point called. Rejecting access");
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
+
     }
 }

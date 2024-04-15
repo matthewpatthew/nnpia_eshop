@@ -23,7 +23,7 @@ class AppUserControllerTest {
     @WithMockAdmin
     void testExistingUserEndpoint() throws Exception {
         String existingUserId = "1";
-        api.perform(get("/users/admin/{id}", existingUserId))
+        api.perform(get("/appusers/{id}", existingUserId))
                 .andExpect(status().isOk());
     }
 
@@ -31,27 +31,27 @@ class AppUserControllerTest {
     @WithMockAdmin
     void testNonExistingUserEndpoint() throws Exception {
         String existingUserId = "0";
-        api.perform(get("/users/admin/{id}", existingUserId))
+        api.perform(get("/appusers/{id}", existingUserId))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void testNotLoggedInShouldNotSeeSecuredEndpoint() throws Exception {
-        api.perform(get("/users/admin"))
+        api.perform(get("/appusers"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     @WithMockUser
     void testUserShouldNotSeeAdminEndpoint() throws Exception {
-        api.perform(get("/users/admin"))
+        api.perform(get("/appusers/1"))
                 .andExpect(status().isForbidden());
     }
 
     @Test
     @WithMockAdmin
     void testAdminShouldSeeAdminEndpoint() throws Exception {
-        api.perform(get("/users/admin"))
+        api.perform(get("/appusers"))
                 .andExpect(status().isOk());
     }
 }

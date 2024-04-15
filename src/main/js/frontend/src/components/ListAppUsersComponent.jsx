@@ -11,11 +11,9 @@ const ListAppUsersComponent = () => {
 
     useEffect(() => {
         listAppUsers().then((response) => {
-            console.log(response)
             setAppUsers(response.data)
         }).catch(error => {
-            //console.error(error)
-            if (error.response && error.response.status === 403) {
+            if (error.response && error.response.status === 401) {
                 navigator('/login');
             }
         })
