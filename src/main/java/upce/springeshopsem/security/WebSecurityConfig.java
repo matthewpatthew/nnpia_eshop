@@ -46,7 +46,7 @@ public class WebSecurityConfig {
                 .exceptionHandling(h -> h.authenticationEntryPoint(unauthorizedHandler))
                 .authorizeHttpRequests(registry -> registry
                         .requestMatchers("/products").permitAll()
-                        .requestMatchers("/auth/login").permitAll()
+                        .requestMatchers("/auth/login/**").permitAll()
                         .anyRequest().authenticated()
                 );
         return http.build();

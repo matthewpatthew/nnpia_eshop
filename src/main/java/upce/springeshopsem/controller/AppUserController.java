@@ -71,8 +71,8 @@ public class AppUserController {
         appUser.setUsername(dto.getUsername());
         appUser.setPassword(passwordEncoder.encode(dto.getPassword()));
         appUser.setEmail(dto.getEmail());
-        if (dto.getRoles() != null) {
-            appUser.setRoles(roleService.findByIds(dto.getRoles()));
+        if (dto.getUserRoles() != null) {
+            appUser.setRoles(roleService.findByIds(dto.getUserRoles()));
         }
         return appUser;
     }
@@ -83,8 +83,8 @@ public class AppUserController {
         appUser.setUsername(dto.getUsername());
         appUser.setPassword(passwordEncoder.encode(dto.getPassword()));
         appUser.setEmail(dto.getEmail());
-        if (dto.getRoles() != null) {
-            appUser.setRoles(roleService.findByIds(dto.getRoles()));
+        if (dto.getUserRoles() != null) {
+            appUser.setRoles(roleService.findByIds(dto.getUserRoles()));
         }
         return appUser;
     }

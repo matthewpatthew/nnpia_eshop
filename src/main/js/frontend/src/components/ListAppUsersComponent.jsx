@@ -1,46 +1,49 @@
-import React, {useEffect, useState} from "react";
-import {listAppUsers} from "../services/AppUserService.jsx";
+import React, { useEffect, useState } from "react";
+import { deleteAppUser, listAppUsers } from "../services/AppUserService.jsx";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 const ListAppUsersComponent = () => {
 
-    const [appUsers, setAppUsers] = useState([])
-    const navigator = useNavigate()
+    const [appUsers, setAppUsers] = useState([]);
+    const navigator = useNavigate();
 
     useEffect(() => {
-        listAppUsers().then((response) => {
-            setAppUsers(response.data)
-        }).catch(error => {
-            if (error.response && error.response.status === 401) {
-                navigator('/login');
-            }
-        })
-
-
+        getAllAppUsers();
     }, []);
 
-    function addNewAppUser() {
-        navigator('/add-appuser')
+    function getAllAppUsers() {
+        listAppUsers().then((response) => {
+            setAppUsers(response.data);
+        }).catch(error => {
+            navigator('/products');
+        });
     }
 
-    function deleteAppUser() {
-
+    function add() {
+        navigator('/add-appuser');
     }
 
-    function updateAppUser() {
-
+    function update(id) {
+        navigator(`/edit-appuser/${id}`);
     }
 
+    function delete_(id) {
+        deleteAppUser(id).then((response) => {
+            getAllAppUsers();
+        }).catch(error => {
+            console.log(error)
+        });
+    }
 
     return (
         <div className='container'>
             <h2 className='text-center'>Users</h2>
             <div>
-                <button className='btn btn-primary mb-2 me-4' onClick={addNewAppUser}>Add AppUser</button>
-                <button className='btn btn-primary mb-2 me-4' onClick={deleteAppUser}>Delete AppUser</button>
-                <button className='btn btn-primary mb-2' onClick={updateAppUser}>Update AppUser</button>
+                <button className='btn btn-primary mb-2'
+                        onClick={add}>Add
+                </button>
             </div>
             <table className='table table-responsive table-bordered'>
                 <thead>
@@ -49,6 +52,7 @@ const ListAppUsersComponent = () => {
                     <th>Username</th>
                     <th>Email</th>
                     <th>Roles</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -59,13 +63,21 @@ const ListAppUsersComponent = () => {
                             <td>{appUser.username}</td>
                             <td>{appUser.email}</td>
                             <td>{appUser.roles.map(role => role.name).join(', ')}</td>
+                            <td>
+                                <button className='btn btn-primary me-2'
+                                        onClick={() => update(appUser.id)}>Update
+                                </button>
+                                <button className='btn btn-danger btn'
+                                        onClick={() => delete_(appUser.id)}>Delete
+                                </button>
+                            </td>
                         </tr>
                     )
                 }
                 </tbody>
             </table>
         </div>
-    )
-}
+    );
+};
 
-export default ListAppUsersComponent
+export default ListAppUsersComponent;

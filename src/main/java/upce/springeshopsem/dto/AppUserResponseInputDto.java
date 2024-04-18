@@ -11,5 +11,5 @@ public class AppUserResponseInputDto {
     private String username;
     private String password;
     private String email;
-    private List<Long> roles;
+    private List<Long> userRoles;
 }

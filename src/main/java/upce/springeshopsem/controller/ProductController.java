@@ -3,6 +3,7 @@ package upce.springeshopsem.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import upce.springeshopsem.dto.ProductResponseDto;
@@ -38,18 +39,21 @@ public class ProductController {
         return ResponseEntity.ok(product.toDto());
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("")
     public ResponseEntity<ProductResponseDto> create(@RequestBody @Validated ProductResponseInputDto productResponseInputDto) {
         Product product = productService.create(toEntity(productResponseInputDto));
         return new ResponseEntity<>(product.toDto(), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponseDto> update(@PathVariable Long id, @RequestBody @Validated ProductResponseInputDto productResponseInputDto) {
         Product product = productService.update(toEntity(id, productResponseInputDto));
         return ResponseEntity.ok(product.toDto());
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) throws ResourceNotFoundException {
         productService.delete(id);
@@ -78,4 +82,7 @@ public class ProductController {
         product.setImage(image);
         return product;
     }
+
 }
+
+

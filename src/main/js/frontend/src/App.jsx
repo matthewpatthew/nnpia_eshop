@@ -1,27 +1,40 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import './App.css';
 import HeaderComponent from "./components/HeaderComponent.jsx";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import AppUserFormComponent from "./components/AppUserFormComponent.jsx";
-import LoginComponent from "./components/LoginComponent.jsx";
+import LoginFormComponent from "./components/LoginFormComponent.jsx";
 import ListAppUsersComponent from "./components/ListAppUsersComponent.jsx";
 import ListProductsComponent from "./components/ListProductsComponent.jsx";
-import AddProductForm from "./components/AddProductForm.jsx";
+import ProductFormComponent from "./components/ProductFormComponent.jsx";
 
 const App = () => {
 
     return (
-        <BrowserRouter>
-            <HeaderComponent/>
-            <Routes>
-                <Route path='/appusers' element={<ListAppUsersComponent/>}/>
-                <Route path='/add-appuser' element={<AppUserFormComponent/>}/>
-                <Route path='/products' element={<ListProductsComponent/>}/>
-                <Route path='/' element={<ListProductsComponent/>}/>
-                <Route path='/login' element={<LoginComponent/>}/>
-                <Route path='add-product' element={<AddProductForm/>}/>
-            </Routes>
-        </BrowserRouter>
+        <div className="app-container">
+            <BrowserRouter>
+                <HeaderComponent/>
+                <Routes>
+                    <Route path='/login' element={<LoginFormComponent/>}/>
+                    {/*
+                        <Route path='/profile' element={<ProfileComponent/>}/>
+                        <Route path='/' element={<MainPageComponent/>}/>
+                    */}
+
+
+                    <Route path='/products' element={<ListProductsComponent/>}/>
+                    <Route path='add-product' element={<ProductFormComponent/>}/>
+                    <Route path='edit-product' element={<ProductFormComponent/>}/>
+                    <Route path='delete-product' element={<ProductFormComponent/>}/>
+
+                    <Route path='/appusers' element={<ListAppUsersComponent/>}/>
+                    <Route path='/add-appuser' element={<AppUserFormComponent/>}/>
+                    <Route path='/edit-appuser/:id' element={<AppUserFormComponent/>}/>
+                    <Route path='/delete-appuser/:id' element={<AppUserFormComponent/>}/>
+
+                </Routes>
+            </BrowserRouter>
+        </div>
     )
 }
 

@@ -1,84 +1,112 @@
-import React, {useState, useEffect} from "react";
-import {listRoles} from "../services/RolesService.jsx";
-import {createAppUser} from "../services/AppUserService.jsx";
-import {useNavigate} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { listRoles } from "../services/RolesService.jsx";
+import { createAppUser, getAppUser, updateAppUser } from "../services/AppUserService.jsx";
+import { useNavigate, useParams } from "react-router-dom";
 
 
 const AppUserFormComponent = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('Default123');
-    const [roles, setRoles] = useState([]);
+    const [userRoles, setUserRoles] = useState([]);
+
     const [allRoles, setAllRoles] = useState([]);
+
+    const { id } = useParams();
 
     const [errors, setErrors] = useState({
         username: '',
         email: '',
         password: '',
         roles: ''
-    })
+    });
 
-    const navigator = useNavigate()
+    const navigator = useNavigate();
 
     useEffect(() => {
         listRoles().then((response) => {
-            setAllRoles(response.data)
+            setAllRoles(response.data);
         }).catch(error => {
-            console.error(error)
-        })
+            console.error(error);
+        });
     }, []);
 
-    function saveAppUser(e) {
-        e.preventDefault()
+    useEffect(() => {
+        if (id) {
+            getAppUser(id).then((response) => { //update
+                setUsername(response.data.username);
+                setEmail(response.data.email);
+                const roles = response.data.roles.map(role => role.id);
+                setUserRoles(roles);
+                allRoles.forEach(role => {
+                    if (roles.includes(role.id)) {
+                        toggleRole(role.id);
+                    }
+                });
+            }).catch(error => {
+                console.error(error);
+            });
+        }
+
+    }, [id]);
+
+    function saveOrUpdateAppUser(e) {
+        e.preventDefault();
 
         if (validateForm()) {
-            const AppUser = {username, email, password, roles}
+            const appUser = { username, email, password, userRoles };
 
-            createAppUser(AppUser).then((response) => {
-                navigator('/appusers')
-            })
+            if (id) {
+                updateAppUser(appUser, id).then(r => {
+                    navigator('/appusers');
+                });
+            } else {
+                createAppUser(appUser).then((response) => {
+                    navigator('/appusers');
+                });
+            }
         }
     }
 
     function validateForm() {
         let valid = true;
 
-        const errorsCopy = {...errors}
+        const errorsCopy = { ...errors };
 
         if (username.trim()) {
-            errorsCopy.username = ''
+            errorsCopy.username = '';
         } else {
-            errorsCopy.username = 'Username is required'
-            valid = false
+            errorsCopy.username = 'Username is required';
+            valid = false;
         }
 
         if (email.trim()) {
-            errorsCopy.email = ''
+            errorsCopy.email = '';
         } else {
-            errorsCopy.email = 'Email is required'
-            valid = false
+            errorsCopy.email = 'Email is required';
+            valid = false;
         }
 
         if (password.trim()) {
-            errorsCopy.password = ''
+            errorsCopy.password = '';
         } else {
-            errorsCopy.password = 'Password is required'
-            valid = false
+            errorsCopy.password = 'Password is required';
+            valid = false;
         }
 
-        if (roles.length > 0) {
-            errorsCopy.roles = ''
+        if (userRoles.length > 0) {
+            errorsCopy.roles = '';
         } else {
-            errorsCopy.roles = 'At least one role must be selected'
-            valid = false
+            errorsCopy.roles = 'At least one role must be selected';
+            valid = false;
         }
 
         setErrors(errorsCopy);
-        return valid
+        return valid;
     }
 
     function toggleRole(roleId) {
-        setRoles(prevSelectedRoles => {
+        setUserRoles(prevSelectedRoles => {
             if (prevSelectedRoles.includes(roleId)) {
                 return prevSelectedRoles.filter(id => id !== roleId);
             } else {
@@ -87,11 +115,22 @@ const AppUserFormComponent = () => {
         });
     }
 
+    function pageTitle() {
+        if (id) {
+            return <h2 className='text-center'>Update AppUser</h2>;
+        } else {
+            return <h2 className='text-center'>Add AppUser</h2>;
+        }
+    }
+
     return (
-        <div className='container' style={{maxWidth: '600px'}}>
+        <div className='container'>
+            <br/>
             <div className='row'>
-                <div className='card'>
-                    <h2 className='text-center'>Add AppUser</h2>
+                <div className='card col-md-6 offset-md-3 '>
+                    {
+                        pageTitle()
+                    }
                     <div className='card-body'>
                         <div>
                             <label className='form-label'>Username</label>
@@ -101,7 +140,7 @@ const AppUserFormComponent = () => {
                                    onChange={(e) => setUsername((e.target.value))}/>
                             {errors.username && <div className='invalid-feedback'>{errors.username}</div>}
                         </div>
-                        <div className='mb-2'>
+                        <div className='mb-3'>
                             <label className='form-label'>Email</label>
                             <input type='text'
                                    className={`form-control ${errors.email ? 'is-invalid' : ''}`}
@@ -109,7 +148,7 @@ const AppUserFormComponent = () => {
                                    onChange={(e) => setEmail((e.target.value))}/>
                             {errors.email && <div className='invalid-feedback'>{errors.email}</div>}
                         </div>
-                        <div className='mb-2'>
+                        <div className='mb-3'>
                             <label className='form-label'>Password</label>
                             <input type='text'
                                    className={`form-control ${errors.password ? 'is-invalid' : ''}`}
@@ -117,7 +156,7 @@ const AppUserFormComponent = () => {
                                    onChange={(e) => setPassword((e.target.value))}/>
                             {errors.password && <div className='invalid-feedback'>{errors.password}</div>}
                         </div>
-                        <div className='mb-2'>
+                        <div className='mb-3'>
                             <label className='form-label'>Roles</label>
                             {allRoles.map(role => (
                                 <div key={role.id} className='form-check'>
@@ -126,7 +165,7 @@ const AppUserFormComponent = () => {
                                         className='form-check-input'
                                         id={`role-${role.id}`}
                                         value={role.id}
-                                        checked={roles.includes(role.id)}
+                                        checked={userRoles.includes(role.id)}
                                         onChange={() => toggleRole(role.id)}
                                     />
                                     <label className='form-check-label' htmlFor={`role-${role.id}`}>{role.name}</label>
@@ -134,7 +173,8 @@ const AppUserFormComponent = () => {
                             ))}
                         </div>
                         <div>
-                            <button className='btn btn-primary mb-2 me-4' onClick={saveAppUser}>Submit
+                            <button
+                                className='btn btn-success mb-3 me-4' onClick={saveOrUpdateAppUser}>Submit
                             </button>
                         </div>
 
@@ -142,7 +182,7 @@ const AppUserFormComponent = () => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default AppUserFormComponent;

@@ -33,6 +33,9 @@ public class AppUser {
     @OneToMany(mappedBy = "user")
     private List<Purchase> purchases = new ArrayList<>();
 
+    @ManyToOne
+    private Address address;
+
     public AppUser() {
     }
 

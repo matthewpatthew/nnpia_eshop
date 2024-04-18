@@ -32,7 +32,7 @@ public class Product {
     }
 
     public ProductResponseDto toDto() {
-        String base64Image = Base64.getEncoder().encodeToString(image);
+            String base64Image = Base64.getEncoder().encodeToString(image);
         return new ProductResponseDto(
                 id,
                 name,

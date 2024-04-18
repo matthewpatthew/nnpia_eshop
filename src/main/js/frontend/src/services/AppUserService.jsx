@@ -1,26 +1,31 @@
 import axios from "axios";
+import Cookies from "js-cookie";
 
-const REST_API_BASE_URL = 'http://localhost:9000/api/v1/appusers'
-const token = localStorage.getItem('token')
-console.log(token)
+const REST_API_BASE_URL = 'http://localhost:9000/api/v1/appusers';
+const token = Cookies.get('token');
 
-const listAppUsers = () => {
-    if (token !== null) {
-        return axios.get(REST_API_BASE_URL, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-    } else {
-        return axios.get(REST_API_BASE_URL);
+export const listAppUsers = () => axios.get(REST_API_BASE_URL, {
+    headers: {
+        Authorization: `Bearer ${token}`
     }
-};
-
-
+});
 export const createAppUser = (appUser) => axios.post(REST_API_BASE_URL, appUser, {
     headers: {
         Authorization: `Bearer ${token}`
     }
-})
-
-export {listAppUsers}
+});
+export const getAppUser = (id) => axios.get(REST_API_BASE_URL + `/${id}`, {
+    headers: {
+        Authorization: `Bearer ${token}`
+    }
+});
+export const updateAppUser = (appUser, id) => axios.put(REST_API_BASE_URL + `/${id}`, appUser, {
+    headers: {
+        Authorization: `Bearer ${token}`
+    }
+});
+export const deleteAppUser = (id) => axios.delete(REST_API_BASE_URL + `/${id}`, {
+    headers: {
+        Authorization: `Bearer ${token}`
+    }
+});
