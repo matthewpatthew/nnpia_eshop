@@ -1,5 +1,6 @@
 package upce.springeshopsem.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import upce.springeshopsem.dto.ProductResponseDto;
@@ -20,11 +21,12 @@ public class Product {
 
     private byte[] image;
 
-    private String price;
+    private Double price;
 
     private String description;
 
-    @OneToMany(mappedBy = "id")
+    @JsonIgnore
+    @OneToMany(mappedBy = "product")
     private List<ProductPurchase> purchases = new ArrayList<>();
 
     public Product() {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { deleteAppUser, listAppUsers } from "../services/AppUserService.jsx";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 
 
@@ -17,12 +17,12 @@ const ListAppUsersComponent = () => {
         listAppUsers().then((response) => {
             setAppUsers(response.data);
         }).catch(error => {
-            navigator('/products');
+            navigator("/products");
         });
     }
 
     function add() {
-        navigator('/add-appuser');
+        navigator("/add-appuser");
     }
 
     function update(id) {
@@ -38,14 +38,14 @@ const ListAppUsersComponent = () => {
     }
 
     return (
-        <div className='container'>
-            <h2 className='text-center'>Users</h2>
+        <div className="container">
+            <h2 className="text-center heading">USERS</h2>
             <div>
-                <button className='btn btn-primary mb-2'
+                <button className="btn btn-primary mb-2"
                         onClick={add}>Add
                 </button>
             </div>
-            <table className='table table-responsive table-bordered'>
+            <table className="table table-responsive table-bordered">
                 <thead>
                 <tr>
                     <th>ID</th>
@@ -62,12 +62,12 @@ const ListAppUsersComponent = () => {
                             <td>{appUser.id}</td>
                             <td>{appUser.username}</td>
                             <td>{appUser.email}</td>
-                            <td>{appUser.roles.map(role => role.name).join(', ')}</td>
+                            <td>{appUser.roles.map(role => role.name).join(", ")}</td>
                             <td>
-                                <button className='btn btn-primary me-2'
+                                <button className="btn btn-primary me-2"
                                         onClick={() => update(appUser.id)}>Update
                                 </button>
-                                <button className='btn btn-danger btn'
+                                <button className="btn btn-danger btn"
                                         onClick={() => delete_(appUser.id)}>Delete
                                 </button>
                             </td>

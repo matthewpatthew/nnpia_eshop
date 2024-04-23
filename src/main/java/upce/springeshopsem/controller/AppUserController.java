@@ -46,10 +46,9 @@ public class AppUserController {
         return ResponseEntity.ok(appUser.toDto());
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("")
     public ResponseEntity<AppUserResponseDto> create(@RequestBody @Validated AppUserResponseInputDto appUserResponseInputDto) {
-        AppUser appUser = appUserService.create(toEntity(appUserResponseInputDto));
+        AppUser appUser = appUserService.create((toEntity(appUserResponseInputDto)));
         return new ResponseEntity<>(appUser.toDto(), HttpStatus.CREATED);
     }
 
@@ -59,6 +58,7 @@ public class AppUserController {
         AppUser appUser = appUserService.update(toEntity(id, appUserResponseInputDto));
         return ResponseEntity.ok(appUser.toDto());
     }
+
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) throws ResourceNotFoundException {

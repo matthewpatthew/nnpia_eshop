@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
+import useAuth from "../hooks/useAuth.jsx";
 import Cookies from "js-cookie";
-import {useNavigate} from "react-router-dom";
 
 const brandStyle = {
     fontFamily: "Mona Shark",
@@ -18,31 +18,18 @@ const spaceStyle = {
 };
 
 const HeaderComponent = () => {
-    const [loggedIn, setLoggedIn] = useState(Cookies.get("loggedIn") === "true");
-    const navigate = useNavigate();
+    const {loggedIn, handleLogout} = useAuth();
 
-    useEffect(() => {
-        const loggedInCookie = Cookies.get("loggedIn");
-        if (loggedInCookie === "true") {
-            setLoggedIn(true);
-        } else {
-            setLoggedIn(false);
-        }
-    }, [location.pathname]);
-
-    const handleLogout = () => {
-        Cookies.remove('token');
-        Cookies.remove('userRoles');
-        Cookies.remove('loggedIn');
-        setLoggedIn(false);
-        navigate('/login');
+    const isAdmin = () => {
+        const roles = Cookies.get("userRoles");
+        return roles != null && roles.includes("ROLE_ADMIN");
     };
 
     return (
         <div>
             <header>
-                <nav className='navbar navbar-dark bg-primary bg-black navbar-expand-lg'>
-                    <a style={brandStyle} className='navbar-brand fw-bold m-2 ms-4'
+                <nav className="navbar navbar-dark bg-primary bg-black navbar-expand-lg">
+                    <a style={brandStyle} className="navbar-brand fw-bold m-2 ms-4"
                        href="http://localhost:3000/products">Eshop</a>
 
                     <div style={spaceStyle}></div>
@@ -55,20 +42,27 @@ const HeaderComponent = () => {
                         <li className="nav-item">
                             <a style={itemStyle} className="nav-link fw-bold" href="http://localhost:3000/cart">Cart</a>
                         </li>
-                        <li className="nav-item">
-                            <a style={itemStyle} className="nav-link fw-bold" href="#">Pricing</a>
-                        </li>
                     </ul>
-                    <ul className="navbar-nav ms-lg-auto me-3">
-                        <li className="nav-item">
-                            <a style={itemStyle} className="nav-link fw-bold"
-                               href="http://localhost:3000/profile">Profile</a>
-                        </li>
-                        {loggedIn ? (
+                    {isAdmin() &&
+                        <ul className="navbar-nav mr-auto">
                             <li className="nav-item">
-                                <a style={itemStyle} className="nav-link fw-bold" href="#"
-                                   onClick={handleLogout}>Logout</a>
+                                <a style={itemStyle} className="nav-link fw-bold" href="http://localhost:3000/appusers">AppUsers</a>
                             </li>
+                        </ul>
+                    }
+                    <ul className="navbar-nav ms-lg-auto me-3">
+                        {loggedIn ? (
+                            <>
+                                <li className="nav-item">
+                                    <a style={itemStyle} className="nav-link fw-bold"
+                                       href="http://localhost:3000/profile">Profile</a>
+                                </li>
+                                <li className="nav-item">
+                                    <a style={itemStyle} className="nav-link fw-bold" href="#"
+                                       onClick={handleLogout}>Logout</a>
+                                </li>
+                            </>
+
                         ) : (
                             <li className="nav-item">
                                 <a style={itemStyle} className="nav-link fw-bold"

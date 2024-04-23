@@ -9,6 +9,6 @@ public class ProductResponseDto {
     private Long id;
     private String name;
     private String image;
-    private String price;
+    private Double price;
     private String description;
 }

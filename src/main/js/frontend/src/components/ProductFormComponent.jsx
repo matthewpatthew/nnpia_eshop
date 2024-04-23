@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
-import { createProduct } from '../services/ProductService.jsx';
+import React, { useState, useRef } from "react";
+import { createProduct } from "../services/ProductService.jsx";
+import { useNavigate } from "react-router-dom";
 
 const ProductFormComponent = () => {
+    const fileInputRef = useRef(null);
+
     const [product, setProduct] = useState({
-        name: '',
+        name: "",
         image: null,
-        price: '',
-        description: ''
+        price: "",
+        description: ""
     });
 
     const handleChange = (e) => {
@@ -26,7 +29,7 @@ const ProductFormComponent = () => {
             const reader = new FileReader();
             reader.readAsDataURL(product.image);
             reader.onload = async () => {
-                const base64Image = reader.result.split(',')[1];
+                const base64Image = reader.result.split(",")[1];
 
                 const productData = {
                     name: product.name,
@@ -34,61 +37,72 @@ const ProductFormComponent = () => {
                     price: product.price,
                     description: product.description
                 };
-
+                console.log(product)
                 try {
                     await createProduct(productData);
-                    alert('Product successfully added!');
+                    alert("Product successfully added!");
                     setProduct({
-                        name: '',
+                        name: "",
                         image: null,
-                        price: '',
-                        description: ''
+                        price: "",
+                        description: ""
                     });
+                    fileInputRef.current.value = null;
                 } catch (error) {
-                    console.error('Error adding product:', error);
-                    alert('Error adding product. Please try again later.');
+                    console.error("Error adding product:", error);
+                    alert("Error adding product. Please try again later.");
                 }
             };
         } catch (error) {
-            console.error('Error encoding image:', error);
-            alert('Error encoding image. Please try again later.');
+            console.error("Error encoding image:", error);
+            alert("Error encoding image. Please try again later.");
         }
     };
 
     return (
-        <div className='container'>
-            <br/>
-            <div className='row'>
-                <div className='card col-md-6 offset-md-3'>
-                    <div className='card-body'>
+        <div className="container">
+            <br />
+            <div className="row">
+                <div className="card col-md-6 offset-md-3">
+                    <div className="card-body">
                         <div>
                             <label className="form-label">Name</label>
-                            <input type="text"
-                                   className="form-control"
-                                   name="name"
-                                   value={product.name}
-                                   onChange={handleChange} />
+                            <input
+                                type="text"
+                                className="form-control"
+                                name="name"
+                                value={product.name}
+                                onChange={handleChange}
+                            />
                         </div>
                         <div className="mb-3">
                             <label className="form-label">Image</label>
-                            <input type="file"
-                                   className="form-control"
-                                   accept="image/*"
-                                   onChange={handleImageChange} />
+                            <input
+                                type="file"
+                                className="form-control"
+                                accept="image/*"
+                                onChange={handleImageChange}
+                                ref={fileInputRef}
+                            />
                         </div>
                         <div className="mb-3">
                             <label className="form-label">Price</label>
-                            <input type="text"
-                                   className="form-control"
-                                   name="price" value={product.price}
-                                   onChange={handleChange} />
+                            <input
+                                type="text"
+                                className="form-control"
+                                name="price"
+                                value={product.price}
+                                onChange={handleChange}
+                            />
                         </div>
                         <div className="mb-3">
                             <label className="form-label">Description</label>
-                            <textarea className="form-control"
-                                      name="description"
-                                      value={product.description}
-                                      onChange={handleChange} />
+                            <textarea
+                                className="form-control"
+                                name="description"
+                                value={product.description}
+                                onChange={handleChange}
+                            />
                         </div>
                         <div>
                             <button

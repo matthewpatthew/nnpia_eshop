@@ -10,6 +10,7 @@ import upce.springeshopsem.dto.ProductResponseDto;
 import upce.springeshopsem.dto.ProductResponseInputDto;
 import upce.springeshopsem.entity.Product;
 import upce.springeshopsem.exception.ResourceNotFoundException;
+import upce.springeshopsem.mapper.ProductMapper;
 import upce.springeshopsem.service.ProductService;
 
 import java.util.ArrayList;
@@ -42,14 +43,14 @@ public class ProductController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("")
     public ResponseEntity<ProductResponseDto> create(@RequestBody @Validated ProductResponseInputDto productResponseInputDto) {
-        Product product = productService.create(toEntity(productResponseInputDto));
+        Product product = productService.create(ProductMapper.toEntity(productResponseInputDto));
         return new ResponseEntity<>(product.toDto(), HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponseDto> update(@PathVariable Long id, @RequestBody @Validated ProductResponseInputDto productResponseInputDto) {
-        Product product = productService.update(toEntity(id, productResponseInputDto));
+        Product product = productService.update(ProductMapper.toEntity(id, productResponseInputDto));
         return ResponseEntity.ok(product.toDto());
     }
 
@@ -59,30 +60,6 @@ public class ProductController {
         productService.delete(id);
         return ResponseEntity.noContent().build();
     }
-
-    private Product toEntity(ProductResponseInputDto dto) {
-        Product product = new Product();
-        product.setName(dto.getName());
-        product.setDescription(dto.getDescription());
-        product.setPrice(dto.getPrice());
-        String encodedImage = dto.getImage();
-        byte[] image = Base64.getDecoder().decode(encodedImage);
-        product.setImage(image);
-        return product;
-    }
-
-    private Product toEntity(Long id, ProductResponseInputDto dto) {
-        Product product = new Product();
-        product.setId(id);
-        product.setName(dto.getName());
-        product.setDescription(dto.getDescription());
-        product.setPrice(dto.getPrice());
-        String encodedImage = dto.getImage();
-        byte[] image = Base64.getDecoder().decode(encodedImage);
-        product.setImage(image);
-        return product;
-    }
-
 }
 
 

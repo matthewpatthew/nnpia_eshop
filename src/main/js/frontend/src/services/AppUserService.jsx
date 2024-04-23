@@ -1,19 +1,15 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const REST_API_BASE_URL = 'http://localhost:9000/api/v1/appusers';
-const token = Cookies.get('token');
+const REST_API_BASE_URL = "http://localhost:9000/api/v1/appusers";
+const token = Cookies.get("token");
 
 export const listAppUsers = () => axios.get(REST_API_BASE_URL, {
     headers: {
         Authorization: `Bearer ${token}`
     }
 });
-export const createAppUser = (appUser) => axios.post(REST_API_BASE_URL, appUser, {
-    headers: {
-        Authorization: `Bearer ${token}`
-    }
-});
+export const createAppUser = (appUser) => axios.post(REST_API_BASE_URL, appUser);
 export const getAppUser = (id) => axios.get(REST_API_BASE_URL + `/${id}`, {
     headers: {
         Authorization: `Bearer ${token}`

@@ -8,6 +8,6 @@ import lombok.Data;
 public class ProductResponseInputDto {
     private String name;
     private String image;
-    private String price;
+    private Double price;
     private String description;
 }

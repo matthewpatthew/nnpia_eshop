@@ -1,14 +1,14 @@
-import React, {useState} from 'react';
-import {Link, useNavigate} from 'react-router-dom';
+import React, {useState} from "react";
+import {Link, useNavigate} from "react-router-dom";
 import {login} from "../services/LoginService.jsx";
 import {jwtDecode} from "jwt-decode";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 
 
 const LoginFormComponent = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
@@ -19,20 +19,18 @@ const LoginFormComponent = () => {
             const token = response.data.accessToken;
             if (token) {
                 const decodedToken = jwtDecode(token);
-                Cookies.set('token', token, {expires: 7});
+                Cookies.set("token", token, {expires: 7});
+                const userId = decodedToken.sub
+                Cookies.set("userId",userId);
                 const roles = decodedToken.a;
-                Cookies.set('userRoles', JSON.stringify(roles), {expires: 7});
-                Cookies.set('loggedIn', true)
-                navigate('/products');
+                Cookies.set("userRoles", JSON.stringify(roles), {expires: 7});
+                Cookies.set("loggedIn", true)
+                navigate("/products");
             }
         } catch (error) {
-            setError('Invalid username or password');
+            alert("Invalid username or password");
         }
     };
-
-    function handleRegister() {
-
-    }
 
     return (
         <div className="container">
@@ -58,7 +56,6 @@ const LoginFormComponent = () => {
                                    className="form-control"
                                    onChange={(e) => setPassword(e.target.value)}/>
                         </div>
-                        {error && <div>{error}</div>}
                         <div className="d-flex justify-content-between align-items-center">
                             <button
                                 className="btn btn-success"
