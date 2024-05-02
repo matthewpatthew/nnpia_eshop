@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import {useNavigate} from "react-router-dom";
-import {deleteProduct, listProducts} from "../services/ProductService.jsx";
+import {deleteProduct, getCount, listProducts} from "../services/ProductService.jsx";
 import Cookies from "js-cookie";
 
 
@@ -20,16 +20,19 @@ const ListProductsComponent = () => {
     const [cart, setCart] = useState([]);
     const [products, setProducts] = useState([]);
     const [quantities, setQuantities] = useState({})
+    const [page, setPage] = useState(0);
+    const [size, setSize] = useState(6);
+    const [count, setCount] = useState(0);
+
+    const [sortBy, setSortBy] = useState(null);
+    const [sortOrder, setSortOrder] = useState("asc");
 
     const navigator = useNavigate();
 
     useEffect(() => {
+        countProducts();
         getAllProducts();
-    }, []);
-
-    useEffect(() => {
-        console.log(cart);
-    }, [cart]);
+    }, [page, size]);
 
     useEffect(() => {
         const storedCart = localStorage.getItem("cart");
@@ -37,8 +40,18 @@ const ListProductsComponent = () => {
             setCart(JSON.parse(storedCart));
     }, []);
 
+    function countProducts() {
+        getCount()
+            .then((response) => {
+                setCount(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
     function getAllProducts() {
-        listProducts().then((response) => {
+        listProducts(page, size).then((response) => {
             setProducts(response.data)
         }).catch(error => {
             console.log(error)
@@ -66,7 +79,6 @@ const ListProductsComponent = () => {
             navigator("/login");
             return;
         }
-
         const updatedCart = [...cart];
         let found = false;
 
@@ -87,20 +99,32 @@ const ListProductsComponent = () => {
             ...prevQuantities,
             [productId]: quantity,
         }));
-
         localStorage.setItem("cart", JSON.stringify(updatedCart));
     };
+
+    const totalPages = Math.ceil(count / size);
+    const hasNextPage = page < totalPages - 1;
 
     return (
         <div className="container">
             <br/>
-            <h2 className="text-center heading">PRODUCTS</h2>
-            {isAdmin() &&
-                <>
-                    <button className="btn btn-primary mb-2"
-                            onClick={add}>Add
-                    </button>
-                </>}
+            <h2 className="text-center heading">Products</h2>
+            <div className="d-flex justify-content-end mb-3">
+                <div className="btn-group">
+                    <select className="form-select" value={sortBy || ""} onChange={(e) => setSortBy(e.target.value)}>
+                        <option value="">Sort by...</option>
+                        <option value="name">Name</option>
+                        <option value="price">Price</option>
+                    </select>
+                </div>
+                {isAdmin() &&
+                    <>
+                        <button className="btn btn-primary mb-2 width110"
+                                onClick={add}>Add
+                        </button>
+                    </>}
+            </div>
+
             <br/>
             <div className="row row-cols-1 row-cols-md-3 g-4">
                 {products.map(product => (
@@ -122,11 +146,10 @@ const ListProductsComponent = () => {
                                                 ...quantities, [product.id]: parseInt(e.target.value),
                                             })
                                         }
-                                        className="form-control me-2"
-                                        style={{maxWidth: "100px"}}
+                                        className="form-control me-2 width110"
                                     />
                                     <button
-                                        className="btn btn-primary me-2"
+                                        className="btn btn-primary me-2 width110"
                                         onClick={() => addToCart(product.id, quantities[product.id] || 1)}>
                                         Add To Cart
                                     </button>
@@ -134,11 +157,11 @@ const ListProductsComponent = () => {
                                 {isAdmin() && (
                                     <>
                                         <button
-                                            className="btn btn-primary me-2"
+                                            className="btn btn-primary me-2 width110"
                                             onClick={() => update(product.id)}>Update
                                         </button>
                                         <button
-                                            className="btn btn-danger me-2"
+                                            className="btn btn-danger me-2 width110"
                                             onClick={() => delete_(product.id)}>Delete
                                         </button>
                                     </>
@@ -147,6 +170,19 @@ const ListProductsComponent = () => {
                         </div>
                     </div>
                 ))}
+                <div className="offset-md-5 mb-3">
+                    <button
+                        className="btn btn-primary me-4 width110"
+                        onClick={() => setPage(page - 1)}
+                        disabled={page === 0}>Previous
+                    </button>
+                    <span className="me-4" style={{color: "WHITE", fontSize: 20}}>{page + 1}</span>
+                    <button
+                        className="btn btn-primary width110"
+                        onClick={() => setPage(page + 1)}
+                        disabled={!hasNextPage}>Next
+                    </button>
+                </div>
             </div>
         </div>
     );

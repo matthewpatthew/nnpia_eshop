@@ -3,7 +3,7 @@ import useAuth from "../hooks/useAuth.jsx";
 import Cookies from "js-cookie";
 
 const brandStyle = {
-    fontFamily: "Mona Shark",
+    fontFamily: "Arial",
     fontSize: "40px ",
     color: "GOLD"
 };
@@ -11,6 +11,7 @@ const brandStyle = {
 const itemStyle = {
     fontFamily: "Himagine",
     fontSize: "25px ",
+
 };
 
 const spaceStyle = {
@@ -39,14 +40,20 @@ const HeaderComponent = () => {
                             <a style={itemStyle} className="nav-link fw-bold"
                                href="http://localhost:3000/products">Products</a>
                         </li>
-                        <li className="nav-item">
-                            <a style={itemStyle} className="nav-link fw-bold" href="http://localhost:3000/cart">Cart</a>
-                        </li>
+                        {loggedIn &&
+                            <>
+                                <li className="nav-item">
+                                    <a style={itemStyle} className="nav-link fw-bold"
+                                       href="http://localhost:3000/cart">Cart</a>
+                                </li>
+                            </>
+                        }
                     </ul>
                     {isAdmin() &&
                         <ul className="navbar-nav mr-auto">
                             <li className="nav-item">
-                                <a style={itemStyle} className="nav-link fw-bold" href="http://localhost:3000/appusers">AppUsers</a>
+                                <a style={itemStyle} className="nav-link fw-bold"
+                                   href="http://localhost:3000/appusers">AppUsers</a>
                             </li>
                         </ul>
                     }

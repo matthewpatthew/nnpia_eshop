@@ -37,7 +37,7 @@ const AppUserFormComponent = () => {
 
     useEffect(() => {
         if (id) {
-            getAppUser(id).then((response) => { //update
+            getAppUser(id).then((response) => {
                 setUsername(response.data.username);
                 setEmail(response.data.email);
                 const roles = response.data.roles.map(role => role.id);

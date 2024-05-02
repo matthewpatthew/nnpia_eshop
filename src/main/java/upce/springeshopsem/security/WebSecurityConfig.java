@@ -47,7 +47,10 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(registry -> registry
                         .requestMatchers("/appusers").permitAll()
                         .requestMatchers("/products/**").permitAll()
+                        .requestMatchers("/products").permitAll()
                         .requestMatchers("/auth/login").permitAll()
+                        .requestMatchers("/purchases").permitAll()
+                        .requestMatchers("/addresses/**").permitAll()
                         .anyRequest().authenticated()
                 );
         return http.build();

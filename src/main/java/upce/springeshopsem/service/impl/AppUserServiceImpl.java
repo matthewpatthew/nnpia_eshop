@@ -2,6 +2,8 @@ package upce.springeshopsem.service.impl;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import upce.springeshopsem.entity.AppUser;
 import upce.springeshopsem.exception.ResourceNotFoundException;
@@ -18,8 +20,8 @@ public class AppUserServiceImpl implements AppUserService {
     private final AppUserRepository appUserRepository;
 
     @Override
-    public List<AppUser> findAll() {
-        return appUserRepository.findAll();
+    public Page<AppUser> findAllAppUsers(Pageable pageable) {
+        return appUserRepository.findAllAppUsers(pageable);
     }
 
     @Override
@@ -52,5 +54,10 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public AppUser findByUsername(String username) {
         return appUserRepository.findByUsername(username);
+    }
+
+    @Override
+    public Long getCount() {
+        return appUserRepository.count();
     }
 }

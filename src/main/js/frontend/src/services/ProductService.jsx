@@ -4,7 +4,9 @@ import Cookies from "js-cookie";
 const REST_API_BASE_URL = "http://localhost:9000/api/v1/products";
 const token = Cookies.get("token");
 
-export const listProducts = () => axios.get(REST_API_BASE_URL);
+export const listProducts = (page, size) => axios.get(REST_API_BASE_URL, {
+    params: {page, size}
+});
 
 export const createProduct = (product) => axios.post(REST_API_BASE_URL, product, {
     headers: {
@@ -26,3 +28,4 @@ export const deleteProduct = (id) => axios.delete(REST_API_BASE_URL + `/${id}`, 
         Authorization: `Bearer ${token}`
     }
 });
+export const getCount = () => axios.get(REST_API_BASE_URL + "/count");

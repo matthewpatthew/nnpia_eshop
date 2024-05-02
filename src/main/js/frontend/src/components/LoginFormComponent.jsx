@@ -19,12 +19,10 @@ const LoginFormComponent = () => {
             const token = response.data.accessToken;
             if (token) {
                 const decodedToken = jwtDecode(token);
-                Cookies.set("token", token, {expires: 7});
-                const userId = decodedToken.sub
-                Cookies.set("userId",userId);
-                const roles = decodedToken.a;
-                Cookies.set("userRoles", JSON.stringify(roles), {expires: 7});
-                Cookies.set("loggedIn", true)
+                Cookies.set("token", token, {expires: 1});
+                Cookies.set("userId", decodedToken.sub, {expires: 1});
+                Cookies.set("userRoles", JSON.stringify(decodedToken.a), {expires: 1});
+                Cookies.set("loggedIn", true, {expires: 1});
                 navigate("/products");
             }
         } catch (error) {

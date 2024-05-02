@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { getProduct } from "../services/ProductService.jsx";
 import "../css/styles.css"
+import {useNavigate} from "react-router-dom";
 
 const CartComponent = () => {
     const [cart, setCart] = useState([]);
     const [cartProducts, setCartProducts] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
+
+    const navigator = useNavigate()
 
     useEffect(() => {
         const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -29,8 +32,8 @@ const CartComponent = () => {
             }
             setCartProducts(products);
             setTotalPrice(totalPrice);
+            localStorage.setItem("totalPrice", totalPrice.toString());
         };
-
         loadCartProducts();
     }, [cart]);
 
@@ -40,10 +43,14 @@ const CartComponent = () => {
         localStorage.setItem("cart", JSON.stringify(updatedCart));
     };
 
+    function continueToPurchasePage(){
+        navigator("/order")
+    }
+
     return (
         <div className="container">
             <br/>
-            <h2 className="text-center heading">SHOPPING CART</h2>
+            <h2 className="text-center heading mb-5">Shopping Cart</h2>
             <table className="table">
                 <thead>
                 <tr>
@@ -64,8 +71,7 @@ const CartComponent = () => {
                         <td>
                             <button
                                 className="btn btn-danger"
-                                onClick={() => removeFromCart(product.id)}>
-                                Remove
+                                onClick={() => removeFromCart(product.id)}>Remove
                             </button>
                         </td>
                     </tr>
@@ -74,6 +80,10 @@ const CartComponent = () => {
             </table>
             <div className="text-end">
                 <h5 className="other-text">Total Price: ${totalPrice}</h5>
+                <button
+                    className="btn btn-success"
+                    onClick={()=> continueToPurchasePage()}>Continue..
+                </button>
             </div>
         </div>
     );

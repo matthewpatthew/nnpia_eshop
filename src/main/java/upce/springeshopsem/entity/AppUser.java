@@ -16,6 +16,12 @@ public class AppUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String firstName;
+
+    private String surname;
+
+    private String phoneNumber;
+
     private String username;
 
     @JsonIgnore
@@ -45,7 +51,10 @@ public class AppUser {
                 id,
                 username,
                 email,
-                roles
+                roles,
+                firstName,
+                surname,
+                phoneNumber
         );
     }
 }

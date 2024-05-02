@@ -7,9 +7,13 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class AppUserResponseInputDto {
+public class AppUserRequestDto {
+
     private String username;
     private String password;
     private String email;
     private List<Long> userRoles;
+    private String firstName;
+    private String surname;
+    private String phoneNumber;
 }

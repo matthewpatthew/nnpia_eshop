@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 const ProductFormComponent = () => {
     const fileInputRef = useRef(null);
 
+    const [processingImage, setProcessingImage] = useState(false);
+
     const [product, setProduct] = useState({
         name: "",
         image: null,
@@ -25,6 +27,11 @@ const ProductFormComponent = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        if (!product.image || processingImage) {
+            return;
+        }
+        setProcessingImage(true);
+
         try {
             const reader = new FileReader();
             reader.readAsDataURL(product.image);
@@ -37,25 +44,22 @@ const ProductFormComponent = () => {
                     price: product.price,
                     description: product.description
                 };
-                console.log(product)
-                try {
-                    await createProduct(productData);
-                    alert("Product successfully added!");
-                    setProduct({
-                        name: "",
-                        image: null,
-                        price: "",
-                        description: ""
-                    });
-                    fileInputRef.current.value = null;
-                } catch (error) {
-                    console.error("Error adding product:", error);
-                    alert("Error adding product. Please try again later.");
-                }
+
+                await createProduct(productData);
+                alert("Product successfully added!");
+                setProduct({
+                    name: "",
+                    image: null,
+                    price: "",
+                    description: ""
+                });
+                fileInputRef.current.value = null;
             };
         } catch (error) {
             console.error("Error encoding image:", error);
             alert("Error encoding image. Please try again later.");
+        } finally {
+            setProcessingImage(false);
         }
     };
 

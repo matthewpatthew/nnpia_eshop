@@ -1,6 +1,8 @@
 package upce.springeshopsem.controller;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -8,7 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import upce.springeshopsem.dto.AppUserResponseDto;
-import upce.springeshopsem.dto.AppUserResponseInputDto;
+import upce.springeshopsem.dto.AppUserRequestDto;
 import upce.springeshopsem.entity.AppUser;
 import upce.springeshopsem.exception.ResourceNotFoundException;
 import upce.springeshopsem.service.AppUserService;
@@ -30,8 +32,8 @@ public class AppUserController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("")
-    public ResponseEntity<List<AppUserResponseDto>> findAll() {
-        List<AppUser> appUsers = appUserService.findAll();
+    public ResponseEntity<List<AppUserResponseDto>> findAll(Pageable pageable) {
+        Page<AppUser> appUsers = appUserService.findAllAppUsers(pageable);
         List<AppUserResponseDto> appUserDtoResponse = new ArrayList<>();
         for (AppUser appUser : appUsers) {
             appUserDtoResponse.add(appUser.toDto());
@@ -47,15 +49,15 @@ public class AppUserController {
     }
 
     @PostMapping("")
-    public ResponseEntity<AppUserResponseDto> create(@RequestBody @Validated AppUserResponseInputDto appUserResponseInputDto) {
-        AppUser appUser = appUserService.create((toEntity(appUserResponseInputDto)));
+    public ResponseEntity<AppUserResponseDto> create(@RequestBody @Validated AppUserRequestDto requestDto) {
+        AppUser appUser = appUserService.create((toEntity(requestDto)));
         return new ResponseEntity<>(appUser.toDto(), HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<AppUserResponseDto> update(@PathVariable Long id, @RequestBody @Validated AppUserResponseInputDto appUserResponseInputDto) {
-        AppUser appUser = appUserService.update(toEntity(id, appUserResponseInputDto));
+    public ResponseEntity<AppUserResponseDto> update(@PathVariable Long id, @RequestBody @Validated AppUserRequestDto requestDto) {
+        AppUser appUser = appUserService.update(toEntity(id, requestDto));
         return ResponseEntity.ok(appUser.toDto());
     }
 
@@ -66,7 +68,14 @@ public class AppUserController {
         return ResponseEntity.noContent().build();
     }
 
-    private AppUser toEntity(AppUserResponseInputDto dto) {
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/count")
+    public ResponseEntity<Long> getCount() {
+        Long count = appUserService.getCount();
+        return ResponseEntity.ok(count);
+    }
+
+    private AppUser toEntity(AppUserRequestDto dto) {
         AppUser appUser = new AppUser();
         appUser.setUsername(dto.getUsername());
         appUser.setPassword(passwordEncoder.encode(dto.getPassword()));
@@ -77,7 +86,7 @@ public class AppUserController {
         return appUser;
     }
 
-    private AppUser toEntity(Long id, AppUserResponseInputDto dto) {
+    private AppUser toEntity(Long id, AppUserRequestDto dto) {
         AppUser appUser = new AppUser();
         appUser.setId(id);
         appUser.setUsername(dto.getUsername());

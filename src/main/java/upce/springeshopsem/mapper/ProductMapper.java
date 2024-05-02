@@ -1,13 +1,13 @@
 package upce.springeshopsem.mapper;
 
-import upce.springeshopsem.dto.ProductResponseInputDto;
+import upce.springeshopsem.dto.ProductRequestDto;
 import upce.springeshopsem.entity.Product;
 
 import java.util.Base64;
 
 public class ProductMapper {
 
-    public static Product toEntity(ProductResponseInputDto dto) {
+    public static Product toEntity(ProductRequestDto dto) {
         Product product = new Product();
         product.setName(dto.getName());
         product.setDescription(dto.getDescription());
@@ -18,7 +18,7 @@ public class ProductMapper {
         return product;
     }
 
-    public static Product toEntity(Long id, ProductResponseInputDto dto) {
+    public static Product toEntity(Long id, ProductRequestDto dto) {
         Product product = new Product();
         product.setId(id);
         product.setName(dto.getName());
