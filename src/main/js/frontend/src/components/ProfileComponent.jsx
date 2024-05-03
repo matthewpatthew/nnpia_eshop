@@ -1,51 +1,43 @@
-import React, {useEffect, useState} from "react";
-import FormComponent from "./FormComponent";
-
+import React, {useState} from "react";
+import Cookies from "js-cookie";
+import useUserData from "../hooks/useUserData.jsx";
+import {updateAppUser} from "../services/AppUserService.jsx";
+import {updateAddress} from "../services/AddressService.jsx";
+import UserForm from "../hooks/UserForm.jsx";
 
 const ProfileComponent = () => {
-    // State pro informace o uživateli
-    const [userInfo, setUserInfo] = useState({});
-    // State pro seznam objednávek
     const [orderHistory, setOrderHistory] = useState([]);
+    const userId = Cookies.get("userId");
+    const {userData, handleUserDataChange} = useUserData(userId);
 
-    // Funkce pro načtení informací o uživateli a seznamu objednávek po načtení komponenty
-    useEffect(() => {
+    const handleSubmit = async (e) => {
+        try {
+            await updateAppUser(userId, userData);
+            await updateAddress(userId, userData)
+            alert("Account details updated")
 
-    }, []);
-
-    // Funkce pro aktualizaci informací o uživateli
-    const updateUserInfo = (updatedInfo) => {
-        // Zde můžete implementovat zaslání aktualizovaných informací na server
-        console.log("Updated user info:", updatedInfo);
-        // Aktualizace stavu s novými informacemi
-        setUserInfo(updatedInfo);
+        } catch (error) {
+            console.error("Error updating account details:", error);
+        }
     };
+
 
     return (
         <div className="container">
-            <h2>User Profile</h2>
-            <div className="row">
-                <div className="col-md-6">
-                    <h3>User Information</h3>
-                    <FormComponent
-                        formData={[
-                            {
-                                label: "First Name",
-                                type: "text",
-                                name: "firstName",
-                                value: "",
-                            },
-                            {
-                                label: "Surname",
-                                type: "text",
-                                name: "surname",
-                                value: "userData.surname"
-                            }
-                        ]}
-                        handleDataChange={updateUserInfo}/>
+            <div className="row d-flex justify-content-center just">
+                <div className="col-md-4">
+                    <br/>
+                    <h2 className="text-center heading">User Information</h2>
+                    <UserForm
+                        userData={userData}
+                        handleUserDataChange={handleUserDataChange}
+                        handleSubmit={handleSubmit}
+                    />
                 </div>
-                <div className="col-md-6">
-                    <h3>Order History</h3>
+                <div className="col-md-4 offset-md-1">
+                    <br/>
+                    <h3 className="text-center heading ">Order History</h3>
+                    <br/>
                     <table className="table">
                         <thead>
                         <tr>
@@ -67,8 +59,7 @@ const ProfileComponent = () => {
                 </div>
             </div>
         </div>
-    )
-        ;
+    );
 };
 
 export default ProfileComponent;

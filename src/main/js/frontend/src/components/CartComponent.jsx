@@ -61,6 +61,8 @@ const CartComponent = () => {
 
     }
 
+    const canOrder = cartProducts.length > 0;
+
     return (
         <div className="container">
             <br/>
@@ -96,7 +98,9 @@ const CartComponent = () => {
                 <h5 className="other-text">Total Price: ${totalPrice}</h5>
                 <button
                     className="btn btn-success"
-                    onClick={() => continueToPurchasePage()}>Continue..
+                    onClick={() => continueToPurchasePage()}
+                    disabled={!canOrder}
+                >Continue..
                 </button>
             </div>
         </div>

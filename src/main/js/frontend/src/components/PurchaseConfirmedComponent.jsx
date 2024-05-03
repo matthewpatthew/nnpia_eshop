@@ -13,7 +13,7 @@ const PurchaseConfirmedComponent = () => {
             <p className="lead">Thank you for your trust.</p>
             <button
                 className="btn btn-success"
-                onClick={()=> navigator("/products")}>Back to homepage
+                onClick={() => navigator("/products")}>Back to homepage
             </button>
         </div>
     );

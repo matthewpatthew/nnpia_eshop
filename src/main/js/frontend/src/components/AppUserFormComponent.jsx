@@ -107,7 +107,7 @@ const AppUserFormComponent = () => {
             valid = false;
         }
 
-        if(!isAdmin()){
+        if (!isAdmin()) {
             if (password.trim()) {
                 errorsCopy.password = "";
             } else {

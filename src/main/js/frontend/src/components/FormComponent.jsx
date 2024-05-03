@@ -2,10 +2,10 @@ import React from "react";
 
 const FormComponent = ({formData, handleDataChange, handleSubmit}) => {
     return (
-        <div className="container">
+        <>
             <br/>
             <div className="row">
-                <div className="card col-md-4 offset-md-4">
+                <div className="card">
                     {formData.map((field, index) => (
                         <div className="mb-3" key={index}>
                             <label className="form-label">{field.label}</label>
@@ -18,14 +18,16 @@ const FormComponent = ({formData, handleDataChange, handleSubmit}) => {
                             />
                         </div>
                     ))}
-                    <button
-                        className="btn btn-primary width110 offset-md-4 mb-3"
-                        onClick={handleSubmit}
-                    >Confirm
-                    </button>
+                    <div className="d-flex justify-content-center align-items-center mb-3">
+                        <button
+                            className="btn btn-primary width110 "
+                            onClick={handleSubmit}
+                        >Confirm
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 

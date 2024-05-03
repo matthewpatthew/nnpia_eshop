@@ -1,6 +1,5 @@
-import React, { useState, useRef } from "react";
-import { createProduct } from "../services/ProductService.jsx";
-import { useNavigate } from "react-router-dom";
+import React, {useRef, useState} from "react";
+import {createProduct} from "../services/ProductService.jsx";
 
 const ProductFormComponent = () => {
     const fileInputRef = useRef(null);
@@ -15,13 +14,13 @@ const ProductFormComponent = () => {
     });
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setProduct({ ...product, [name]: value });
+        const {name, value} = e.target;
+        setProduct({...product, [name]: value});
     };
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
-        setProduct({ ...product, image: file });
+        setProduct({...product, image: file});
     };
 
     const handleSubmit = async (e) => {
@@ -65,7 +64,7 @@ const ProductFormComponent = () => {
 
     return (
         <div className="container">
-            <br />
+            <br/>
             <div className="row">
                 <div className="card col-md-6 offset-md-3">
                     <div className="card-body">
