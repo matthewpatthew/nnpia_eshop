@@ -3,14 +3,15 @@ package upce.springeshopsem.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import upce.springeshopsem.entity.AppUser;
 import upce.springeshopsem.exception.ResourceNotFoundException;
 import upce.springeshopsem.repository.AppUserRepository;
 import upce.springeshopsem.service.AppUserService;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,14 +21,16 @@ public class AppUserServiceImpl implements AppUserService {
     private final AppUserRepository appUserRepository;
 
     @Override
-    public Page<AppUser> findAllAppUsers(Pageable pageable) {
-        return appUserRepository.findAllAppUsers(pageable);
+    public Page<AppUser> findAllAppUsers(Pageable pageable, String sortBy, String sortOrder) {
+        Sort.Direction direction = sortOrder.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        return appUserRepository.findAllAppUsers(PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort));
     }
 
     @Override
-    public AppUser findById(Long id) throws ResourceNotFoundException {
+    public AppUser findById(Long id) {
         Optional<AppUser> appUser = appUserRepository.findById(id);
-        return appUser.orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+        return appUser.orElse(null);
     }
 
     @Override
@@ -44,10 +47,7 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     @Transactional
-    public void delete(Long id) throws ResourceNotFoundException {
-        if (!appUserRepository.existsById(id)) {
-            throw new ResourceNotFoundException("User not found with id: " + id);
-        }
+    public void delete(Long id) {
         appUserRepository.deleteById(id);
     }
 

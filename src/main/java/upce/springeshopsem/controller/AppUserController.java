@@ -6,14 +6,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import upce.springeshopsem.dto.AppUserResponseDto;
 import upce.springeshopsem.dto.AppUserRequestDto;
+import upce.springeshopsem.dto.AppUserResponseDto;
 import upce.springeshopsem.entity.AppUser;
 import upce.springeshopsem.exception.ResourceNotFoundException;
+import upce.springeshopsem.security.UserPrincipal;
 import upce.springeshopsem.service.AppUserService;
+import upce.springeshopsem.service.AuthService;
 import upce.springeshopsem.service.RoleService;
 
 import java.util.ArrayList;
@@ -32,8 +36,11 @@ public class AppUserController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("")
-    public ResponseEntity<List<AppUserResponseDto>> findAll(Pageable pageable) {
-        Page<AppUser> appUsers = appUserService.findAllAppUsers(pageable);
+    public ResponseEntity<List<AppUserResponseDto>> findAll(
+            Pageable pageable,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(required = false) String sortOrder) {
+        Page<AppUser> appUsers = appUserService.findAllAppUsers(pageable, sortBy, sortOrder);
         List<AppUserResponseDto> appUserDtoResponse = new ArrayList<>();
         for (AppUser appUser : appUsers) {
             appUserDtoResponse.add(appUser.toDto());
@@ -41,9 +48,9 @@ public class AppUserController {
         return ResponseEntity.ok(appUserDtoResponse);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or @authServiceImpl.hasId(#id)")
     @GetMapping("/{id}")
-    public ResponseEntity<AppUserResponseDto> findById(@PathVariable Long id) throws ResourceNotFoundException {
+    public ResponseEntity<AppUserResponseDto> findById(@PathVariable Long id) {
         AppUser appUser = appUserService.findById(id);
         return ResponseEntity.ok(appUser.toDto());
     }
@@ -54,7 +61,7 @@ public class AppUserController {
         return new ResponseEntity<>(appUser.toDto(), HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or @authServiceImpl.hasId(#id)")
     @PutMapping("/{id}")
     public ResponseEntity<AppUserResponseDto> update(@PathVariable Long id, @RequestBody @Validated AppUserRequestDto requestDto) {
         AppUser appUser = appUserService.update(toEntity(id, requestDto));
@@ -63,7 +70,7 @@ public class AppUserController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) throws ResourceNotFoundException {
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         appUserService.delete(id);
         return ResponseEntity.noContent().build();
     }
@@ -87,14 +94,18 @@ public class AppUserController {
     }
 
     private AppUser toEntity(Long id, AppUserRequestDto dto) {
-        AppUser appUser = new AppUser();
-        appUser.setId(id);
-        appUser.setUsername(dto.getUsername());
-        appUser.setPassword(passwordEncoder.encode(dto.getPassword()));
-        appUser.setEmail(dto.getEmail());
-        if (dto.getUserRoles() != null) {
-            appUser.setRoles(roleService.findByIds(dto.getUserRoles()));
+        AppUser appUser = appUserService.findById(id);
+        if (appUser == null) {
+            appUser = new AppUser();
+            appUser.setId(id);
         }
+        if (dto.getUsername() != null) appUser.setUsername(dto.getUsername());
+        if (dto.getPassword() != null) appUser.setPassword(passwordEncoder.encode(dto.getPassword()));
+        if (dto.getEmail() != null) appUser.setEmail(dto.getEmail());
+        if (dto.getUserRoles() != null) appUser.setRoles(roleService.findByIds(dto.getUserRoles()));
+        if (dto.getFirstName() != null) appUser.setFirstName(dto.getFirstName());
+        if (dto.getSurname() != null) appUser.setSurname(dto.getSurname());
+        if (dto.getPhoneNumber() != null) appUser.setPhoneNumber(dto.getPhoneNumber());
         return appUser;
     }
 }

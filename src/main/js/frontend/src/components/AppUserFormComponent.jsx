@@ -72,7 +72,7 @@ const AppUserFormComponent = () => {
             console.log(appUser)
 
             if (id) {
-                updateAppUser(appUser, id).then(r => {
+                updateAppUser(id, appUser).then(r => {
                     navigator("/appusers");
                 });
             } else {

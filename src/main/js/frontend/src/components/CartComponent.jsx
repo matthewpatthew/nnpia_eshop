@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { getProduct } from "../services/ProductService.jsx";
+import React, {useEffect, useState} from "react";
+import {getProduct} from "../services/ProductService.jsx";
 import "../css/styles.css"
 import {useNavigate} from "react-router-dom";
+import Cookies from "js-cookie";
 
 const CartComponent = () => {
     const [cart, setCart] = useState([]);
@@ -9,6 +10,14 @@ const CartComponent = () => {
     const [totalPrice, setTotalPrice] = useState(0);
 
     const navigator = useNavigate()
+    const isLoggedIn = () => {
+        const roles = Cookies.get("userRoles");
+        if (roles) {
+            const parsedRoles = JSON.parse(roles);
+            return parsedRoles.some(role => role === "ROLE_USER" || role === "ROLE_ADMIN");
+        }
+        return false;
+    };
 
     useEffect(() => {
         const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -24,7 +33,7 @@ const CartComponent = () => {
                     const response = await getProduct(item.productId);
                     const product = response.data;
                     const price = product.price * item.quantity;
-                    products.push({ ...product, quantity: item.quantity, totalPrice: price });
+                    products.push({...product, quantity: item.quantity, totalPrice: price});
                     totalPrice += price;
                 } catch (error) {
                     console.log(`Error loading product with ID ${item.productId}: ${error}`);
@@ -43,8 +52,13 @@ const CartComponent = () => {
         localStorage.setItem("cart", JSON.stringify(updatedCart));
     };
 
-    function continueToPurchasePage(){
-        navigator("/order")
+    function continueToPurchasePage() {
+        if (!isLoggedIn()) {
+            navigator("/login")
+        } else {
+            navigator("/order")
+        }
+
     }
 
     return (
@@ -82,7 +96,7 @@ const CartComponent = () => {
                 <h5 className="other-text">Total Price: ${totalPrice}</h5>
                 <button
                     className="btn btn-success"
-                    onClick={()=> continueToPurchasePage()}>Continue..
+                    onClick={() => continueToPurchasePage()}>Continue..
                 </button>
             </div>
         </div>

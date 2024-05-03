@@ -33,7 +33,7 @@ public class PurchaseComponent {
     private final ProductService productService;
     private final ProductPurchaseRepository productPurchaseRepository;
 
-    //@PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @PostMapping("")
     public ResponseEntity<Purchase> create(@RequestBody PurchaseRequestDto purchaseRequestDto) throws ResourceNotFoundException {
         AppUser user = appUserService.findById(purchaseRequestDto.getUserId());

@@ -6,25 +6,20 @@ import Cookies from "js-cookie";
 
 
 const ListProductsComponent = () => {
-
     const isAdmin = () => {
         const roles = Cookies.get("userRoles");
         return roles != null && roles.includes("ROLE_ADMIN");
     };
 
-    const isUser = () => {
-        const roles = Cookies.get("userRoles");
-        return roles != null && roles.includes("ROLE_USER");
-    };
-
     const [cart, setCart] = useState([]);
     const [products, setProducts] = useState([]);
     const [quantities, setQuantities] = useState({})
+
     const [page, setPage] = useState(0);
-    const [size, setSize] = useState(6);
+    const [size, setSize] = useState(9);
     const [count, setCount] = useState(0);
 
-    const [sortBy, setSortBy] = useState(null);
+    const [sortBy, setSortBy] = useState("id");
     const [sortOrder, setSortOrder] = useState("asc");
 
     const navigator = useNavigate();
@@ -32,7 +27,7 @@ const ListProductsComponent = () => {
     useEffect(() => {
         countProducts();
         getAllProducts();
-    }, [page, size]);
+    }, [page, size, sortBy, sortOrder]);
 
     useEffect(() => {
         const storedCart = localStorage.getItem("cart");
@@ -51,7 +46,7 @@ const ListProductsComponent = () => {
     }
 
     function getAllProducts() {
-        listProducts(page, size).then((response) => {
+        listProducts(page, size, sortBy, sortOrder).then((response) => {
             setProducts(response.data)
         }).catch(error => {
             console.log(error)
@@ -75,10 +70,6 @@ const ListProductsComponent = () => {
     }
 
     const addToCart = (productId, quantity) => {
-        if (!isUser()) {
-            navigator("/login");
-            return;
-        }
         const updatedCart = [...cart];
         let found = false;
 
@@ -92,14 +83,17 @@ const ListProductsComponent = () => {
         if (!found) {
             updatedCart.push({productId: productId, quantity: quantity});
         }
-
         setCart(updatedCart);
-
         setQuantities((prevQuantities) => ({
             ...prevQuantities,
             [productId]: quantity,
         }));
         localStorage.setItem("cart", JSON.stringify(updatedCart));
+        alert("Product added to the cart")
+    };
+
+    const toggleSortOrder = () => {
+        setSortOrder(prevSortOrder => prevSortOrder === "asc" ? "desc" : "asc");
     };
 
     const totalPages = Math.ceil(count / size);
@@ -110,23 +104,26 @@ const ListProductsComponent = () => {
             <br/>
             <h2 className="text-center heading">Products</h2>
             <div className="d-flex justify-content-end mb-3">
-                <div className="btn-group">
-                    <select className="form-select" value={sortBy || ""} onChange={(e) => setSortBy(e.target.value)}>
-                        <option value="">Sort by...</option>
-                        <option value="name">Name</option>
-                        <option value="price">Price</option>
-                    </select>
-                </div>
                 {isAdmin() &&
                     <>
-                        <button className="btn btn-primary mb-2 width110"
-                                onClick={add}>Add
+                        <button
+                            className="btn btn-primary width110 me-2"
+                            onClick={add}>Add
                         </button>
-                    </>}
+                    </>
+                }
+                <button className="btn btn-primary width110 me-2"
+                        onClick={toggleSortOrder}>{sortOrder === "asc" ? "Asc" : "Desc"}
+                </button>
+                <select className="form-select width110" value={sortBy || ""}
+                        onChange={(e) => setSortBy(e.target.value)}>
+                    <option value="id">Sort by...</option>
+                    <option value="name">Name</option>
+                    <option value="price">Price</option>
+                </select>
             </div>
-
             <br/>
-            <div className="row row-cols-1 row-cols-md-3 g-4">
+            <div className="row row-cols-1 row-cols-md-3 g-4 mb-4">
                 {products.map(product => (
                     <div key={product.id} className="col">
                         <div className="card h-100">
@@ -170,20 +167,21 @@ const ListProductsComponent = () => {
                         </div>
                     </div>
                 ))}
-                <div className="offset-md-5 mb-3">
-                    <button
-                        className="btn btn-primary me-4 width110"
-                        onClick={() => setPage(page - 1)}
-                        disabled={page === 0}>Previous
-                    </button>
-                    <span className="me-4" style={{color: "WHITE", fontSize: 20}}>{page + 1}</span>
-                    <button
-                        className="btn btn-primary width110"
-                        onClick={() => setPage(page + 1)}
-                        disabled={!hasNextPage}>Next
-                    </button>
-                </div>
             </div>
+            <div className="d-flex justify-content-center align-items-center">
+                <button
+                    className="btn btn-primary me-4 width110"
+                    onClick={() => setPage(page - 1)}
+                    disabled={page === 0}>Previous
+                </button>
+                <span className="me-4" style={{color: "WHITE", fontSize: 20}}>{page + 1}</span>
+                <button
+                    className="btn btn-primary width110"
+                    onClick={() => setPage(page + 1)}
+                    disabled={!hasNextPage}>Next
+                </button>
+            </div>
+            <br/>
         </div>
     );
 };

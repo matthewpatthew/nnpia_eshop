@@ -1,26 +1,28 @@
 import React, {useEffect, useState} from "react";
 import FormComponent from "./FormComponent.jsx";
-import {userAddress} from "../services/AddressService.jsx";
+import {updateAddress, userAddress} from "../services/AddressService.jsx";
 import Cookies from "js-cookie";
-import {getAppUser} from "../services/AppUserService.jsx";
+import {getAppUser, updateAppUser} from "../services/AppUserService.jsx";
 import {createPurchase} from "../services/PurchaseService.jsx";
 
 const PurchaseComponent = () => {
-        const [userData, setUserData] = useState({
-            firstName: "",
-            surname: "",
-            phoneNumber: "",
-            street: "",
-            city: "",
-            zipCode: ""
-        });
 
-        const userId = Cookies.get("userId")
+    const [userData, setUserData] = useState({
+        firstName: "",
+        surname: "",
+        phoneNumber: "",
+        email: "",
+        street: "",
+        city: "",
+        zipCode: ""
+    });
 
-        useEffect(() => {
-            loadUserAddress();
-            loadUserCredentials();
-        }, [])
+    const userId = Cookies.get("userId")
+
+    useEffect(() => {
+        loadUserAddress();
+        loadUserCredentials();
+    }, [])
 
     const loadUserAddress = async () => {
         try {
@@ -42,12 +44,12 @@ const PurchaseComponent = () => {
         try {
             const response = await getAppUser(userId);
             const data = response.data;
-            console.log(data)
             setUserData(prevUserData => ({
                 ...prevUserData,
                 firstName: data.firstName,
                 surname: data.surname,
                 phoneNumber: data.phoneNumber,
+                email: data.email,
             }));
         } catch (error) {
             console.error("Error loading user data");
@@ -61,42 +63,39 @@ const PurchaseComponent = () => {
             [name]: value
         });
     };
+    const handleSubmit = async (e) => {
+        try {
+            const cartData = JSON.parse(localStorage.getItem("cart"));
 
-        const handleSubmit = async (e) => {
-            try {
-                const cartData = JSON.parse(localStorage.getItem("cart"));
+            const productInfo = cartData ? cartData.map(item => ({
+                productId: item.productId,
+                count: item.quantity
+            })) : [];
 
-                console.log(cartData)
+            const totalPrice = parseInt(localStorage.getItem("totalPrice"));
 
-                const productInfo = cartData ? cartData.map(item => ({
-                    productId: item.productId,
-                    count: item.quantity
-                })) : [];
+            const purchaseData = {
+                userId: userId,
+                productInfo: productInfo,
+                totalPrice: totalPrice
+            };
 
-                const totalPrice = parseInt(localStorage.getItem("totalPrice"));
 
-                console.log(totalPrice)
+            await createPurchase(purchaseData);
+            await updateAppUser(userId, userData);
+            await updateAddress(userId, userData)
 
-                const purchaseData = {
-                    userId: userId,
-                    productInfo: productInfo,
-                    totalPrice: totalPrice
-                };
+            console.log("Purchase successfully created");
 
-                console.log(purchaseData)
+        } catch (error) {
+            console.error("Error creating purchase:", error);
+        }
+    };
 
-                await createPurchase(purchaseData);
-
-                updateUserData()
-
-                console.log("Purchase successfully created");
-
-            } catch (error) {
-                console.error("Error creating purchase:", error);
-            }
-        };
-
-        return (
+    return (
+        <>
+            <br/>
+            <h5 className="text-center heading">Purchase details</h5>
             <FormComponent
                 formData={[
                     {
@@ -119,6 +118,12 @@ const PurchaseComponent = () => {
                         value: userData.phoneNumber,
                     },
                     {
+                        label: "Email",
+                        type: "text",
+                        name: "email",
+                        value: userData.email,
+                    },
+                    {
                         label: "Street",
                         type: "text",
                         name: "street",
@@ -138,9 +143,10 @@ const PurchaseComponent = () => {
                     },
                 ]}
                 handleDataChange={handleUserDataChange}
-                handleSubmit={handleSubmit}
-            />
-        );
-    };
+                handleSubmit={handleSubmit}/>
+        </>
+    );
+
+};
 
 export default PurchaseComponent;

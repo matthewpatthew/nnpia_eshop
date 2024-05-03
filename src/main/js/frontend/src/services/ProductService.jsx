@@ -4,8 +4,8 @@ import Cookies from "js-cookie";
 const REST_API_BASE_URL = "http://localhost:9000/api/v1/products";
 const token = Cookies.get("token");
 
-export const listProducts = (page, size) => axios.get(REST_API_BASE_URL, {
-    params: {page, size}
+export const listProducts = (page, size, sortBy, sortOrder) => axios.get(REST_API_BASE_URL, {
+    params: {page, size, sortBy, sortOrder}
 });
 
 export const createProduct = (product) => axios.post(REST_API_BASE_URL, product, {
@@ -13,11 +13,7 @@ export const createProduct = (product) => axios.post(REST_API_BASE_URL, product,
         Authorization: `Bearer ${token}`
     }
 });
-export const getProduct = (id) => axios.get(REST_API_BASE_URL + `/${id}`, {
-    headers: {
-        Authorization: `Bearer ${token}`
-    }
-});
+export const getProduct = (id) => axios.get(REST_API_BASE_URL + `/${id}`)
 export const updateProduct = (id, product) => axios.put(REST_API_BASE_URL + `/${id}`, product, {
     headers: {
         Authorization: `Bearer ${token}`

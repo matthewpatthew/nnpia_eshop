@@ -11,7 +11,6 @@ const brandStyle = {
 const itemStyle = {
     fontFamily: "Himagine",
     fontSize: "25px ",
-
 };
 
 const spaceStyle = {
@@ -40,14 +39,10 @@ const HeaderComponent = () => {
                             <a style={itemStyle} className="nav-link fw-bold"
                                href="http://localhost:3000/products">Products</a>
                         </li>
-                        {loggedIn &&
-                            <>
-                                <li className="nav-item">
-                                    <a style={itemStyle} className="nav-link fw-bold"
-                                       href="http://localhost:3000/cart">Cart</a>
-                                </li>
-                            </>
-                        }
+                        <li className="nav-item">
+                            <a style={itemStyle} className="nav-link fw-bold"
+                               href="http://localhost:3000/cart">Cart</a>
+                        </li>
                     </ul>
                     {isAdmin() &&
                         <ul className="navbar-nav mr-auto">

@@ -45,9 +45,8 @@ public class WebSecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .exceptionHandling(h -> h.authenticationEntryPoint(unauthorizedHandler))
                 .authorizeHttpRequests(registry -> registry
-                        .requestMatchers("/appusers").permitAll()
+                        .requestMatchers("/appusers/**").permitAll()
                         .requestMatchers("/products/**").permitAll()
-                        .requestMatchers("/products").permitAll()
                         .requestMatchers("/auth/login").permitAll()
                         .requestMatchers("/purchases").permitAll()
                         .requestMatchers("/addresses/**").permitAll()

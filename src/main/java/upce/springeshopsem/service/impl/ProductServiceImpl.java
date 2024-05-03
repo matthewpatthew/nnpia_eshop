@@ -3,7 +3,9 @@ package upce.springeshopsem.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import upce.springeshopsem.entity.Product;
 import upce.springeshopsem.exception.ResourceNotFoundException;
@@ -19,8 +21,10 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
 
     @Override
-    public Page<Product> findAll(Pageable pageable) {
-        return productRepository.findAllProducts(pageable);
+    public Page<Product> findAll(Pageable pageable, String sortBy, String sortOrder) {
+        Sort.Direction direction = sortOrder.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        return productRepository.findAllProducts(PageRequest.of(pageable.getPageNumber(),pageable.getPageSize(),sort));
     }
 
     @Override

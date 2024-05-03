@@ -10,15 +10,15 @@ import java.util.List;
 
 public interface AppUserService {
 
-    Page<AppUser> findAllAppUsers(Pageable pageable);
+    Page<AppUser> findAllAppUsers(Pageable pageable,String sortBy, String sortOrder);
 
-    AppUser findById(Long id) throws ResourceNotFoundException;
+    AppUser findById(Long id);
 
     AppUser create(AppUser appUser);
 
     AppUser update(AppUser appUser);
 
-    void delete(Long id) throws ResourceNotFoundException;
+    void delete(Long id);
 
     AppUser findByUsername(String username);
 

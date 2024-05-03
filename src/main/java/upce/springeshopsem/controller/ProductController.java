@@ -8,14 +8,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import upce.springeshopsem.dto.ProductResponseDto;
 import upce.springeshopsem.dto.ProductRequestDto;
+import upce.springeshopsem.dto.ProductResponseDto;
 import upce.springeshopsem.entity.Product;
 import upce.springeshopsem.exception.ResourceNotFoundException;
-import upce.springeshopsem.mapper.ProductMapper;
 import upce.springeshopsem.service.ProductService;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -26,8 +26,11 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("")
-    public ResponseEntity<List<ProductResponseDto>> findAll(Pageable pageable) {
-        Page<Product> products = productService.findAll(pageable);
+    public ResponseEntity<List<ProductResponseDto>> findAll(
+            Pageable pageable,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam String sortOrder) {
+        Page<Product> products = productService.findAll(pageable, sortBy, sortOrder);
         List<ProductResponseDto> productResponseDto = new ArrayList<>();
         for (Product product : products) {
             productResponseDto.add(product.toDto());
@@ -44,14 +47,14 @@ public class ProductController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("")
     public ResponseEntity<ProductResponseDto> create(@RequestBody @Validated ProductRequestDto productRequestDto) {
-        Product product = productService.create(ProductMapper.toEntity(productRequestDto));
+        Product product = productService.create(toEntity(productRequestDto));
         return new ResponseEntity<>(product.toDto(), HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponseDto> update(@PathVariable Long id, @RequestBody @Validated ProductRequestDto productRequestDto) {
-        Product product = productService.update(ProductMapper.toEntity(id, productRequestDto));
+        Product product = productService.update(toEntity(id, productRequestDto));
         return ResponseEntity.ok(product.toDto());
     }
 
@@ -66,6 +69,29 @@ public class ProductController {
     public ResponseEntity<Long> getCount() {
         Long count = productService.getCount();
         return ResponseEntity.ok(count);
+    }
+
+    private Product toEntity(ProductRequestDto dto) {
+        Product product = new Product();
+        product.setName(dto.getName());
+        product.setDescription(dto.getDescription());
+        product.setPrice(dto.getPrice());
+        String encodedImage = dto.getImage();
+        byte[] image = Base64.getDecoder().decode(encodedImage);
+        product.setImage(image);
+        return product;
+    }
+
+    private Product toEntity(Long id, ProductRequestDto dto) {
+        Product product = new Product();
+        product.setId(id);
+        product.setName(dto.getName());
+        product.setDescription(dto.getDescription());
+        product.setPrice(dto.getPrice());
+        String encodedImage = dto.getImage();
+        byte[] image = Base64.getDecoder().decode(encodedImage);
+        product.setImage(image);
+        return product;
     }
 }
 

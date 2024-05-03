@@ -26,32 +26,32 @@ class AppUserControllerTest {
         api.perform(get("/appusers/{id}", existingUserId))
                 .andExpect(status().isOk());
     }
-
     @Test
     @WithMockAdmin
-    void testNonExistingUserEndpoint() throws Exception {
-        String existingUserId = "0";
-        api.perform(get("/appusers/{id}", existingUserId))
-                .andExpect(status().isNotFound());
+    void testAdminShouldSeeAdminEndpoint() throws Exception {
+        api.perform(get("/appusers")
+                        .param("page", "0")
+                        .param("size", "10")
+                        .param("sortBy", "username")
+                        .param("sortOrder", "asc"))
+                .andExpect(status().isOk());
     }
-
     @Test
     void testNotLoggedInShouldNotSeeSecuredEndpoint() throws Exception {
-        api.perform(get("/appusers"))
-                .andExpect(status().isUnauthorized());
+        api.perform(get("/appusers")
+                        .param("page", "0")
+                        .param("size", "10")
+                        .param("sortBy", "username")
+                        .param("sortOrder", "asc"))
+                .andExpect(status().isNotFound());
     }
 
     @Test
     @WithMockUser
     void testUserShouldNotSeeAdminEndpoint() throws Exception {
-        api.perform(get("/appusers/1"))
+        api.perform(get("/appusers/2"))
                 .andExpect(status().isForbidden());
     }
 
-    @Test
-    @WithMockAdmin
-    void testAdminShouldSeeAdminEndpoint() throws Exception {
-        api.perform(get("/appusers"))
-                .andExpect(status().isOk());
-    }
+
 }

@@ -4,7 +4,6 @@ import {login} from "../services/LoginService.jsx";
 import {jwtDecode} from "jwt-decode";
 import Cookies from "js-cookie";
 
-
 const LoginFormComponent = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -24,6 +23,7 @@ const LoginFormComponent = () => {
                 Cookies.set("userRoles", JSON.stringify(decodedToken.a), {expires: 1});
                 Cookies.set("loggedIn", true, {expires: 1});
                 navigate("/products");
+
             }
         } catch (error) {
             alert("Invalid username or password");

@@ -4,19 +4,19 @@ import Cookies from "js-cookie";
 const REST_API_BASE_URL = "http://localhost:9000/api/v1/appusers";
 const token = Cookies.get("token");
 
-export const listAppUsers = (page, size) => axios.get(REST_API_BASE_URL, {
+export const listAppUsers = (page, size, sortBy, sortOrder) => axios.get(REST_API_BASE_URL, {
     headers: {
         Authorization: `Bearer ${token}`
     },
-    params: {page, size}
+    params: {page, size, sortBy, sortOrder}
 });
-export const createAppUser = (appUser) => axios.post(REST_API_BASE_URL, appUser);
 export const getAppUser = (id) => axios.get(REST_API_BASE_URL + `/${id}`, {
     headers: {
         Authorization: `Bearer ${token}`
     }
 });
-export const updateAppUser = (appUser, id) => axios.put(REST_API_BASE_URL + `/${id}`, appUser, {
+export const createAppUser = (appUser) => axios.post(REST_API_BASE_URL, appUser);
+export const updateAppUser = (id, appUser) => axios.put(REST_API_BASE_URL + `/${id}`, appUser, {
     headers: {
         Authorization: `Bearer ${token}`
     }

@@ -1,5 +1,5 @@
 import React from "react";
-import "./App.css";
+import "./App.css"
 import HeaderComponent from "./components/HeaderComponent.jsx";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import AppUserFormComponent from "./components/AppUserFormComponent.jsx";
@@ -9,7 +9,8 @@ import ListProductsComponent from "./components/ListProductsComponent.jsx";
 import ProductFormComponent from "./components/ProductFormComponent.jsx";
 import CartComponent from "./components/CartComponent.jsx";
 import PurchaseComponent from "./components/PurchaseComponent.jsx";
-
+import FooterComponent from "./components/FooterComponent.jsx";
+import ProfileComponent from "./components/ProfileComponent.jsx";
 const App = () => {
 
     return (
@@ -18,9 +19,11 @@ const App = () => {
                 <HeaderComponent/>
                 <Routes>
                     <Route path="/login" element={<LoginFormComponent/>}/>
+                    <Route path="/profile" element={<ProfileComponent/>}/>
                     <Route path="/cart" element={<CartComponent/>}/>
                     <Route path="/order" element={<PurchaseComponent/>}/>
                     <Route path="/register" element={<AppUserFormComponent/>}/>
+                    <Route path="/" element={<ListProductsComponent/>}/>
                     <Route path="/products" element={<ListProductsComponent/>}/>
                     <Route path="add-product" element={<ProductFormComponent/>}/>
                     <Route path="edit-product" element={<ProductFormComponent/>}/>
@@ -30,6 +33,7 @@ const App = () => {
                     <Route path="/edit-appuser/:id" element={<AppUserFormComponent/>}/>
                     <Route path="/delete-appuser/:id" element={<AppUserFormComponent/>}/>
                 </Routes>
+                <FooterComponent/>
             </BrowserRouter>
         </div>
     )
