@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import upce.springeshopsem.mock.WithMockAdmin;
 import upce.springeshopsem.mock.WithMockUser;
+import upce.springeshopsem.service.AppUserService;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -19,6 +20,9 @@ class AppUserControllerTest {
     @Autowired
     private MockMvc api;
 
+    @Autowired
+    AppUserService appUserService;
+
     @Test
     @WithMockAdmin
     void testExistingUserEndpoint() throws Exception {
@@ -26,6 +30,7 @@ class AppUserControllerTest {
         api.perform(get("/appusers/{id}", existingUserId))
                 .andExpect(status().isOk());
     }
+
     @Test
     @WithMockAdmin
     void testAdminShouldSeeAdminEndpoint() throws Exception {
@@ -36,22 +41,25 @@ class AppUserControllerTest {
                         .param("sortOrder", "asc"))
                 .andExpect(status().isOk());
     }
+
     @Test
-    void testNotLoggedInShouldNotSeeSecuredEndpoint() throws Exception {
+    @WithMockUser
+    void testLoggedInButNotAdminShouldNotSeeAdminEndpoint() throws Exception {
         api.perform(get("/appusers")
                         .param("page", "0")
                         .param("size", "10")
                         .param("sortBy", "username")
                         .param("sortOrder", "asc"))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    @WithMockUser
-    void testUserShouldNotSeeAdminEndpoint() throws Exception {
-        api.perform(get("/appusers/2"))
                 .andExpect(status().isForbidden());
     }
 
-
+    @Test
+    void testNotLoggedInShouldNotSeeAdminEndpoint() throws Exception {
+        api.perform(get("/appusers")
+                        .param("page", "0")
+                        .param("size", "10")
+                        .param("sortBy", "username")
+                        .param("sortOrder", "asc"))
+                .andExpect(status().isUnauthorized());
+    }
 }

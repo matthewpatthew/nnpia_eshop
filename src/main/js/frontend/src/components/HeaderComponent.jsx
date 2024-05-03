@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 const brandStyle = {
     fontFamily: "Arial",
     fontSize: "40px ",
-    color: "GOLD"
+    color: "lightblue"
 };
 
 const itemStyle = {

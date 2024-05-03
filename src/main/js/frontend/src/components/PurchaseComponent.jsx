@@ -4,8 +4,11 @@ import {updateAddress, userAddress} from "../services/AddressService.jsx";
 import Cookies from "js-cookie";
 import {getAppUser, updateAppUser} from "../services/AppUserService.jsx";
 import {createPurchase} from "../services/PurchaseService.jsx";
+import {useNavigate} from "react-router-dom";
 
 const PurchaseComponent = () => {
+
+    const navigator = useNavigate()
 
     const [userData, setUserData] = useState({
         firstName: "",
@@ -85,7 +88,7 @@ const PurchaseComponent = () => {
             await updateAppUser(userId, userData);
             await updateAddress(userId, userData)
 
-            console.log("Purchase successfully created");
+            navigator("/order-completed")
 
         } catch (error) {
             console.error("Error creating purchase:", error);

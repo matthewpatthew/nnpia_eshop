@@ -11,6 +11,7 @@ import CartComponent from "./components/CartComponent.jsx";
 import PurchaseComponent from "./components/PurchaseComponent.jsx";
 import FooterComponent from "./components/FooterComponent.jsx";
 import ProfileComponent from "./components/ProfileComponent.jsx";
+import PurchaseConfirmedComponent from "./components/PurchaseConfirmedComponent.jsx";
 const App = () => {
 
     return (
@@ -22,6 +23,7 @@ const App = () => {
                     <Route path="/profile" element={<ProfileComponent/>}/>
                     <Route path="/cart" element={<CartComponent/>}/>
                     <Route path="/order" element={<PurchaseComponent/>}/>
+                    <Route path="/order-completed" element={<PurchaseConfirmedComponent/>}/>
                     <Route path="/register" element={<AppUserFormComponent/>}/>
                     <Route path="/" element={<ListProductsComponent/>}/>
                     <Route path="/products" element={<ListProductsComponent/>}/>
