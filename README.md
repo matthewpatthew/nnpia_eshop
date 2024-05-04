@@ -1,5 +1,5 @@
 
-# Eshop README
+# Eshop
 
 
 Welcome to the documentation for my e-shop application. This README provides essential information on how to set up, configure, and run e-shop application.
