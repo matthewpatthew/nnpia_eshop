@@ -48,7 +48,8 @@ Application is structured into backend and frontend components:
 Written in Java Spring Framework, the backend includes packages such as controller, service, repository, and security. Each package contains classes responsible for specific functionalities following standard practices. The backend server runs on port 9000.
 - Frontend: 
 Developed in JavaScript using React.js, the frontend resides in the ``` src/main/js/frontend ``` directory. 
-
 The frontend application is structured into packages, including components and services.
 Components package contains reusable UI components that are used throughout the application for a consistent look and feel.
-Services package serves as the bridge between the frontend and backend. It handles API calls and communication with the server. For authentication and authorization, JSON Web Tokens (JWT) are utilized to secure communication between the frontend and backend, ensuring secure user authentication and access control. The frontend server runs on port 3000.
+Services package serves as the bridge between the frontend and backend. It handles API calls and communication with the server. 
+
+For authentication and authorization, JSON Web Tokens (JWT) are utilized to secure communication between the frontend and backend, ensuring secure user authentication and access control. The frontend server runs on port 3000.
