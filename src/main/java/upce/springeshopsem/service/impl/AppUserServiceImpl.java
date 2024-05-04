@@ -28,9 +28,9 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public AppUser findById(Long id) {
+    public AppUser findById(Long id) throws ResourceNotFoundException {
         Optional<AppUser> appUser = appUserRepository.findById(id);
-        return appUser.orElse(null);
+        return appUser.orElseThrow(ResourceNotFoundException::new);
     }
 
     @Override

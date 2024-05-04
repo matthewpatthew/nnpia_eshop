@@ -67,7 +67,7 @@ const CartComponent = () => {
         <div className="container">
             <br/>
             <h2 className="text-center heading mb-5">Shopping Cart</h2>
-            <table className="table">
+            <table className="table table-bordered table-responsive ta">
                 <thead>
                 <tr>
                     <th>Product</th>
@@ -95,7 +95,7 @@ const CartComponent = () => {
                 </tbody>
             </table>
             <div className="text-end">
-                <h5 className="other-text">Total Price: ${totalPrice}</h5>
+                <h5 className="other-text">Total Price: {totalPrice}$</h5>
                 <button
                     className="btn btn-success"
                     onClick={() => continueToPurchasePage()}

@@ -1,12 +1,14 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Cookies from "js-cookie";
 import useUserData from "../hooks/useUserData.jsx";
 import {updateAppUser} from "../services/AppUserService.jsx";
 import {updateAddress} from "../services/AddressService.jsx";
 import UserForm from "../hooks/UserForm.jsx";
+import {listProducts} from "../services/ProductService.jsx";
+import {listPurchases} from "../services/PurchaseService.jsx";
 
 const ProfileComponent = () => {
-    const [orderHistory, setOrderHistory] = useState([]);
+    const [purchases, setPurchases] = useState([]);
     const userId = Cookies.get("userId");
     const {userData, handleUserDataChange} = useUserData(userId);
 
@@ -21,6 +23,25 @@ const ProfileComponent = () => {
         }
     };
 
+    useEffect(() => {
+        getPurchases();
+    }, []);
+
+    async function getPurchases() {
+        try {
+            const response = await listPurchases(userId);
+            setPurchases(response.data);
+            console.log(purchases)
+        } catch (error) {
+            console.error("Error fetching purchases:", error);
+        }
+    }
+    function formatDateTime(dateTimeString) {
+        const date = new Date(dateTimeString);
+        const formattedDate = date.toLocaleDateString();
+        const formattedTime = date.toLocaleTimeString();
+        return `${formattedDate} ${formattedTime}`;
+    }
 
     return (
         <div className="container">
@@ -38,20 +59,20 @@ const ProfileComponent = () => {
                     <br/>
                     <h3 className="text-center heading ">Order History</h3>
                     <br/>
-                    <table className="table">
+                    <table className="table table-bordered table-responsive">
                         <thead>
-                        <tr>
-                            <th>Order ID</th>
+                        <tr className="text-center">
+                            <th >Order number</th>
                             <th>Date</th>
                             <th>Total</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {orderHistory.map((order) => (
-                            <tr key={order.id}>
-                                <td>{order.id}</td>
-                                <td>{order.date}</td>
-                                <td>{order.total}</td>
+                        {purchases.map((purchase) => (
+                            <tr key={purchase.id}>
+                                <td>{purchase.id}</td>
+                                <td>{formatDateTime(purchase.creationDate)}</td>
+                                <td>{purchase.totalPrice}$</td>
                             </tr>
                         ))}
                         </tbody>

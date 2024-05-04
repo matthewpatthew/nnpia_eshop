@@ -9,3 +9,8 @@ export const createPurchase = (purchaseData) => axios.post(REST_API_BASE_URL, pu
         Authorization: `Bearer ${token}`
     }
 });
+export const listPurchases = (userId) => axios.get(REST_API_BASE_URL + `/${userId}`, {
+    headers: {
+        Authorization: `Bearer ${token}`
+    }
+});

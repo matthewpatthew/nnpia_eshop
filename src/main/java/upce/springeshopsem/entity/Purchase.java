@@ -3,6 +3,7 @@ package upce.springeshopsem.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import upce.springeshopsem.dto.PurchaseResponseDto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,4 +29,13 @@ public class Purchase {
     @JsonIgnore
     @OneToMany(mappedBy = "purchase")
     private List<ProductPurchase> products = new ArrayList<>();
+
+    public PurchaseResponseDto toDto() {
+
+        return new PurchaseResponseDto(
+                id,
+                creationDate,
+                totalPrice
+        );
+    }
 }

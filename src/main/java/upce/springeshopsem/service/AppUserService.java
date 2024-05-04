@@ -12,7 +12,7 @@ public interface AppUserService {
 
     Page<AppUser> findAllAppUsers(Pageable pageable,String sortBy, String sortOrder);
 
-    AppUser findById(Long id);
+    AppUser findById(Long id) throws ResourceNotFoundException;
 
     AppUser create(AppUser appUser);
 

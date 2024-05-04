@@ -50,7 +50,7 @@ public class AppUserController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or @authServiceImpl.hasId(#id)")
     @GetMapping("/{id}")
-    public ResponseEntity<AppUserResponseDto> findById(@PathVariable Long id) {
+    public ResponseEntity<AppUserResponseDto> findById(@PathVariable Long id) throws ResourceNotFoundException {
         AppUser appUser = appUserService.findById(id);
         return ResponseEntity.ok(appUser.toDto());
     }
@@ -63,7 +63,7 @@ public class AppUserController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or @authServiceImpl.hasId(#id)")
     @PutMapping("/{id}")
-    public ResponseEntity<AppUserResponseDto> update(@PathVariable Long id, @RequestBody @Validated AppUserRequestDto requestDto) {
+    public ResponseEntity<AppUserResponseDto> update(@PathVariable Long id, @RequestBody @Validated AppUserRequestDto requestDto) throws ResourceNotFoundException {
         AppUser appUser = appUserService.update(toEntity(id, requestDto));
         return ResponseEntity.ok(appUser.toDto());
     }
@@ -93,7 +93,7 @@ public class AppUserController {
         return appUser;
     }
 
-    private AppUser toEntity(Long id, AppUserRequestDto dto) {
+    private AppUser toEntity(Long id, AppUserRequestDto dto) throws ResourceNotFoundException {
         AppUser appUser = appUserService.findById(id);
         if (appUser == null) {
             appUser = new AppUser();

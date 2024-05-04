@@ -37,12 +37,11 @@ public class AddressController {
         return ResponseEntity.ok(address.toDto());
     }
 
-    private Address toEntity(Long id, AddressRequestDto dto) {
+    private Address toEntity(Long id, AddressRequestDto dto) throws ResourceNotFoundException {
         AppUser appUser = appUserService.findById(id);
         Address address = addressService.findByUserId(id);
         if (address == null) {
             address = new Address();
-            addressService.update(address);
         }
         if (dto.getStreet() != null) address.setStreet(dto.getStreet());
         if (dto.getCity() != null) address.setCity(dto.getCity());

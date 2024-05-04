@@ -4,12 +4,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import upce.springeshopsem.dto.PurchaseRequestDto;
+import org.springframework.web.bind.annotation.*;
 import upce.springeshopsem.dto.ProductInfo;
+import upce.springeshopsem.dto.PurchaseRequestDto;
+import upce.springeshopsem.dto.PurchaseResponseDto;
 import upce.springeshopsem.entity.AppUser;
 import upce.springeshopsem.entity.ProductPurchase;
 import upce.springeshopsem.entity.Purchase;
@@ -59,4 +57,14 @@ public class PurchaseComponent {
         return new ResponseEntity<>(purchase, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN') or @authServiceImpl.hasId(#userId)")
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<PurchaseResponseDto>> findByUserId(@PathVariable Long userId) {
+        List<Purchase> purchases = purchaseService.findByUserId(userId);
+        List<PurchaseResponseDto> purchaseResponseDto = new ArrayList<>();
+        for (Purchase purchase : purchases) {
+            purchaseResponseDto.add(purchase.toDto());
+        }
+        return ResponseEntity.ok(purchaseResponseDto);
+    }
 }
