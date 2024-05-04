@@ -90,7 +90,6 @@ const AppUserFormComponent = () => {
 
     function validateForm() {
         let valid = true;
-
         const errorsCopy = {...errors};
 
         if (username.trim()) {

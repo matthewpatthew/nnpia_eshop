@@ -4,8 +4,12 @@ package upce.springeshopsem.service.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import upce.springeshopsem.entity.Address;
+import upce.springeshopsem.entity.AppUser;
+import upce.springeshopsem.exception.ResourceNotFoundException;
 import upce.springeshopsem.repository.AddressRepository;
 import upce.springeshopsem.service.AddressService;
+
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -13,8 +17,8 @@ public class AddressServiceImpl implements AddressService {
 
     private final AddressRepository addressRepository;
     @Override
-    public Address findByUserId(Long userId) {
-        return addressRepository.findByUserId(userId);
+    public Address findByUserId(Long userId){
+       return addressRepository.findByUserId(userId);
     }
 
     @Override

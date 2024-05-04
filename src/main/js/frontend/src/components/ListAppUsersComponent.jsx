@@ -8,7 +8,7 @@ const ListAppUsersComponent = () => {
 
     const [appUsers, setAppUsers] = useState([]);
     const [page, setPage] = useState(0);
-    const [size, setSize] = useState(5);
+    const [size, setSize] = useState(9);
     const [count, setCount] = useState(0);
 
     const [sortBy, setSortBy] = useState("id");
@@ -83,6 +83,9 @@ const ListAppUsersComponent = () => {
                     <option value="id">Sort by...</option>
                     <option value="username">Username</option>
                     <option value="email">Email</option>
+                    <option value="firstName">First name</option>
+                    <option value="surname">Surname</option>
+                    <option value="phoneNumber">Phone number</option>
                 </select>
             </div>
             <table className="table table-responsive table-bordered">
@@ -91,6 +94,9 @@ const ListAppUsersComponent = () => {
                     <th>ID</th>
                     <th>Username</th>
                     <th>Email</th>
+                    <th>First name</th>
+                    <th>Surname</th>
+                    <th>Phone number</th>
                     <th>Roles</th>
                     <th>Actions</th>
                 </tr>
@@ -101,6 +107,9 @@ const ListAppUsersComponent = () => {
                         <td>{appUser.id}</td>
                         <td>{appUser.username}</td>
                         <td>{appUser.email}</td>
+                        <td>{appUser.firstName}</td>
+                        <td>{appUser.surname}</td>
+                        <td>{appUser.phoneNumber}</td>
                         <td>{appUser.roles.map((role) => role.name).join(", ")}</td>
                         <td>
                             <button
@@ -129,6 +138,7 @@ const ListAppUsersComponent = () => {
                     disabled={!hasNextPage}>Next
                 </button>
             </div>
+            <br/>
         </div>
     );
 };

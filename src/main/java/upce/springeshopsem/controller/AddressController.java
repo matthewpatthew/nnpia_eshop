@@ -25,7 +25,7 @@ public class AddressController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or @authServiceImpl.hasId(#userId)")
     @GetMapping("/{userId}")
-    public ResponseEntity<AddressResponseDto> getAddressByUserId(@PathVariable Long userId) {
+    public ResponseEntity<AddressResponseDto> getAddressByUserId(@PathVariable Long userId) throws ResourceNotFoundException {
         Address address = addressService.findByUserId(userId);
         return new ResponseEntity<>(address.toDto(), HttpStatus.OK);
     }
