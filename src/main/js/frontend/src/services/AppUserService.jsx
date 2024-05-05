@@ -31,3 +31,8 @@ export const getCount = () => axios.get(REST_API_BASE_URL + "/count", {
         Authorization: `Bearer ${token}`
     }
 });
+export const emailExists = (email) => axios.get(REST_API_BASE_URL + "/checkEmail",
+    {params: {email}})
+
+export const usernameExists = (username) => axios.get(REST_API_BASE_URL + "/checkUsername",
+    {params: {username}})

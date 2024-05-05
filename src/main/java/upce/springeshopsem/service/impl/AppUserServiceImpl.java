@@ -60,4 +60,14 @@ public class AppUserServiceImpl implements AppUserService {
     public Long getCount() {
         return appUserRepository.count();
     }
+
+    @Override
+    public boolean isEmailUnique(String email) {
+        return appUserRepository.findByEmail(email) == null;
+    }
+
+    @Override
+    public boolean isUsernameUnique(String username) {
+        return appUserRepository.findByUsername(username) == null;
+    }
 }

@@ -6,8 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -15,9 +13,7 @@ import upce.springeshopsem.dto.AppUserRequestDto;
 import upce.springeshopsem.dto.AppUserResponseDto;
 import upce.springeshopsem.entity.AppUser;
 import upce.springeshopsem.exception.ResourceNotFoundException;
-import upce.springeshopsem.security.UserPrincipal;
 import upce.springeshopsem.service.AppUserService;
-import upce.springeshopsem.service.AuthService;
 import upce.springeshopsem.service.RoleService;
 
 import java.util.ArrayList;
@@ -82,15 +78,21 @@ public class AppUserController {
         return ResponseEntity.ok(count);
     }
 
+    @GetMapping("/checkEmail")
+    public ResponseEntity<Boolean> checkEmailUniqueness(@RequestParam String email) {
+        boolean isUnique = appUserService.isEmailUnique(email);
+        return ResponseEntity.ok(isUnique);
+    }
+
+    @GetMapping("/checkUsername")
+    public ResponseEntity<Boolean> checkUsernameUniqueness(@RequestParam String username) {
+        boolean isUnique = appUserService.isUsernameUnique(username);
+        return ResponseEntity.ok(isUnique);
+    }
+
     private AppUser toEntity(AppUserRequestDto dto) {
         AppUser appUser = new AppUser();
-        appUser.setUsername(dto.getUsername());
-        appUser.setPassword(passwordEncoder.encode(dto.getPassword()));
-        appUser.setEmail(dto.getEmail());
-        if (dto.getUserRoles() != null) {
-            appUser.setRoles(roleService.findByIds(dto.getUserRoles()));
-        }
-        return appUser;
+        return setAppUser(dto, appUser);
     }
 
     private AppUser toEntity(Long id, AppUserRequestDto dto) throws ResourceNotFoundException {
@@ -99,6 +101,10 @@ public class AppUserController {
             appUser = new AppUser();
             appUser.setId(id);
         }
+        return setAppUser(dto, appUser);
+    }
+
+    private AppUser setAppUser(AppUserRequestDto dto, AppUser appUser) {
         if (dto.getUsername() != null) appUser.setUsername(dto.getUsername());
         if (dto.getPassword() != null) appUser.setPassword(passwordEncoder.encode(dto.getPassword()));
         if (dto.getEmail() != null) appUser.setEmail(dto.getEmail());

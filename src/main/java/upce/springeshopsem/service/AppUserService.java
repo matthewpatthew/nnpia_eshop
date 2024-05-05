@@ -2,15 +2,12 @@ package upce.springeshopsem.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import upce.springeshopsem.entity.Address;
 import upce.springeshopsem.entity.AppUser;
 import upce.springeshopsem.exception.ResourceNotFoundException;
 
-import java.util.List;
-
 public interface AppUserService {
 
-    Page<AppUser> findAllAppUsers(Pageable pageable,String sortBy, String sortOrder);
+    Page<AppUser> findAllAppUsers(Pageable pageable, String sortBy, String sortOrder);
 
     AppUser findById(Long id) throws ResourceNotFoundException;
 
@@ -23,4 +20,8 @@ public interface AppUserService {
     AppUser findByUsername(String username);
 
     Long getCount();
+
+    boolean isEmailUnique(String email);
+
+    boolean isUsernameUnique(String username);
 }
