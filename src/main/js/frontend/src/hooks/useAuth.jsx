@@ -20,6 +20,7 @@ const useAuth = () => {
         Cookies.remove("token");
         Cookies.remove("userRoles");
         Cookies.remove("loggedIn");
+        Cookies.remove("userId");
         Cookies.remove
         setLoggedIn(false);
         navigate("/login");

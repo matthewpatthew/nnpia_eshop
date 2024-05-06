@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import {createProduct, getProduct, updateProduct} from "../services/ProductService.jsx";
 import {useNavigate, useParams} from "react-router-dom";
+import Cookies from "js-cookie";
 
 const ProductFormComponent = () => {
     const fileInputRef = useRef(null);
@@ -20,22 +21,20 @@ const ProductFormComponent = () => {
         setProduct({...product, [name]: value});
     };
 
-    const handleImageChange = (e) => {
+    const handleImageChange =  (e) => {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.readAsDataURL(file);
-            reader.onload = () => {
-                const base64Image = reader.result.split(",")[1];
-                setProduct({...product, image: base64Image});
+             reader.onload = () => {const base64Image = reader.result.split(",")[1];
+                  setProduct({...product, image: base64Image});
             };
         }
-        console.log(product.image)
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(product.image)
+
         try {
             const productData = {
                 name: product.name,
@@ -70,7 +69,6 @@ const ProductFormComponent = () => {
         if (id) {
             getProduct(id).then((response) => {
                 setProduct({
-                    ...product,
                     name: response.data.name,
                     image: response.data.image,
                     price: response.data.price,

@@ -79,7 +79,6 @@ const AppUserFormComponent = () => {
 
     const checkEmailUniqueness = (email) => {
         return emailExists(email).then((response) => {
-            console.log(response.data)
             return response.data;
         }).catch(error => {
             console.log(error);
@@ -88,7 +87,6 @@ const AppUserFormComponent = () => {
 
     const checkUsernameUniqueness = (username) => {
         return usernameExists(username).then((response) => {
-            console.log(response.data)
             return response.data;
         }).catch(error => {
             console.log(error);

@@ -113,11 +113,11 @@ const ListAppUsersComponent = () => {
                         <td>{appUser.roles.map((role) => role.name).join(", ")}</td>
                         <td>
                             <button
-                                className="btn btn-primary me-2"
+                                className="btn btn-primary me-2 width110"
                                 onClick={() => update(appUser.id)}>Update
                             </button>
                             <button
-                                className="btn btn-danger btn"
+                                className="btn btn-danger btn width110"
                                 onClick={() => delete_(appUser.id)}>Delete
                             </button>
                         </td>

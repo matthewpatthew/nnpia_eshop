@@ -18,10 +18,10 @@ const LoginFormComponent = () => {
             const token = response.data.accessToken;
             if (token) {
                 const decodedToken = jwtDecode(token);
-                Cookies.set("token", token, {expires: 1});
-                Cookies.set("userId", decodedToken.sub, {expires: 1});
-                Cookies.set("userRoles", JSON.stringify(decodedToken.a), {expires: 1});
-                Cookies.set("loggedIn", true, {expires: 1});
+                Cookies.set("token", token, {expires: 7});
+                Cookies.set("userId", decodedToken.sub, {expires: 7});
+                Cookies.set("userRoles", JSON.stringify(decodedToken.a), {expires: 7});
+                Cookies.set("loggedIn", true, {expires: 7});
                 navigate("/products");
 
             }
