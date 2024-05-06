@@ -1,10 +1,12 @@
 import React, {useEffect, useRef, useState} from "react";
 import {createProduct, getProduct, updateProduct} from "../services/ProductService.jsx";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 
 const ProductFormComponent = () => {
     const fileInputRef = useRef(null);
     const {id} = useParams();
+
+    const navigator = useNavigate()
 
     const [product, setProduct] = useState({
         name: "",
@@ -20,30 +22,24 @@ const ProductFormComponent = () => {
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
-        setProduct({...product, image: file});
+        if (file) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                const base64Image = reader.result.split(",")[1];
+                setProduct({...product, image: base64Image});
+            };
+        }
+        console.log(product.image)
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(product);
-
+        console.log(product.image)
         try {
-            let base64Image = null;
-
-            if (product.image instanceof File) {
-                const reader = new FileReader();
-                reader.readAsDataURL(product.image);
-                base64Image = await new Promise((resolve, reject) => {
-                    reader.onload = () => resolve(reader.result.split(",")[1]);
-                    reader.onerror = error => reject(error);
-                });
-            } else {
-                base64Image = product.image;
-            }
-
             const productData = {
                 name: product.name,
-                image: base64Image,
+                image: product.image,
                 price: product.price,
                 description: product.description
             };
@@ -51,6 +47,7 @@ const ProductFormComponent = () => {
             if (id) {
                 await updateProduct(id, productData);
                 alert("Product successfully updated !");
+                navigator("/products")
             } else {
                 await createProduct(productData);
                 alert("Product successfully added!");
@@ -97,7 +94,7 @@ const ProductFormComponent = () => {
                                 type="text"
                                 className="form-control"
                                 name="name"
-                                value={product.name}
+                                value={product.name || ""}
                                 onChange={handleChange}
                             />
                         </div>
@@ -117,7 +114,7 @@ const ProductFormComponent = () => {
                                 type="text"
                                 className="form-control"
                                 name="price"
-                                value={product.price}
+                                value={product.price || ""}
                                 onChange={handleChange}
                             />
                         </div>
@@ -126,7 +123,7 @@ const ProductFormComponent = () => {
                             <textarea
                                 className="form-control"
                                 name="description"
-                                value={product.description}
+                                value={product.description || ""}
                                 onChange={handleChange}
                             />
                         </div>

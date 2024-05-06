@@ -13,7 +13,11 @@ export const createProduct = (product) => axios.post(REST_API_BASE_URL, product,
         Authorization: `Bearer ${token}`
     }
 });
-export const getProduct = (id) => axios.get(REST_API_BASE_URL + `/${id}`)
+export const getProduct = (id) => axios.get(REST_API_BASE_URL + `/${id}`, {
+    headers: {
+        Authorization: `Bearer ${token}`
+    }
+});
 export const updateProduct = (id, product) => axios.put(REST_API_BASE_URL + `/${id}`, product, {
     headers: {
         Authorization: `Bearer ${token}`
