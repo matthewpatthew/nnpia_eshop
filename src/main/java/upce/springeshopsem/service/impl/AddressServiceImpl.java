@@ -1,6 +1,7 @@
 package upce.springeshopsem.service.impl;
 
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import upce.springeshopsem.entity.Address;
@@ -21,6 +22,7 @@ public class AddressServiceImpl implements AddressService {
        return addressRepository.findByUserId(userId);
     }
 
+    @Transactional
     @Override
     public Address update(Address address) {
        return addressRepository.save(address);

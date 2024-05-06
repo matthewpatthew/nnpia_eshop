@@ -13,7 +13,7 @@ const FormComponent = ({formData, handleDataChange, handleSubmit}) => {
                                 type={field.type}
                                 className="form-control"
                                 name={field.name}
-                                value={field.value || ""}
+                                value={field.value}
                                 onChange={(e) => handleDataChange(e, field.name)}
                             />
                         </div>

@@ -27,9 +27,9 @@ const App = () => {
                     <Route path="/register" element={<AppUserFormComponent/>}/>
                     <Route path="/" element={<ListProductsComponent/>}/>
                     <Route path="/products" element={<ListProductsComponent/>}/>
-                    <Route path="add-product" element={<ProductFormComponent/>}/>
-                    <Route path="edit-product" element={<ProductFormComponent/>}/>
-                    <Route path="delete-product" element={<ProductFormComponent/>}/>
+                    <Route path="/add-product" element={<ProductFormComponent/>}/>
+                    <Route path="/edit-product/:id" element={<ProductFormComponent/>}/>
+                    <Route path="/delete-product/:id" element={<ProductFormComponent/>}/>
                     <Route path="/appusers" element={<ListAppUsersComponent/>}/>
                     <Route path="/add-appuser" element={<AppUserFormComponent/>}/>
                     <Route path="/edit-appuser/:id" element={<AppUserFormComponent/>}/>

@@ -1,10 +1,10 @@
-import React, {useRef, useState} from "react";
-import {createProduct} from "../services/ProductService.jsx";
+import React, {useEffect, useRef, useState} from "react";
+import {createProduct, getProduct, updateProduct} from "../services/ProductService.jsx";
+import {useParams} from "react-router-dom";
 
 const ProductFormComponent = () => {
     const fileInputRef = useRef(null);
-
-    const [processingImage, setProcessingImage] = useState(false);
+    const {id} = useParams();
 
     const [product, setProduct] = useState({
         name: "",
@@ -25,42 +25,65 @@ const ProductFormComponent = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (!product.image || processingImage) {
-            return;
-        }
-        setProcessingImage(true);
+        console.log(product);
 
         try {
-            const reader = new FileReader();
-            reader.readAsDataURL(product.image);
-            reader.onload = async () => {
-                const base64Image = reader.result.split(",")[1];
+            let base64Image = null;
 
-                const productData = {
-                    name: product.name,
-                    image: base64Image,
-                    price: product.price,
-                    description: product.description
-                };
+            if (product.image instanceof File) {
+                const reader = new FileReader();
+                reader.readAsDataURL(product.image);
+                base64Image = await new Promise((resolve, reject) => {
+                    reader.onload = () => resolve(reader.result.split(",")[1]);
+                    reader.onerror = error => reject(error);
+                });
+            } else {
+                base64Image = product.image;
+            }
 
+            const productData = {
+                name: product.name,
+                image: base64Image,
+                price: product.price,
+                description: product.description
+            };
+
+            if (id) {
+                await updateProduct(id, productData);
+                alert("Product successfully updated !");
+            } else {
                 await createProduct(productData);
                 alert("Product successfully added!");
-                setProduct({
-                    name: "",
-                    image: null,
-                    price: "",
-                    description: ""
-                });
-                fileInputRef.current.value = null;
-            };
+            }
+
+            setProduct({
+                name: "",
+                image: null,
+                price: "",
+                description: ""
+            });
+            fileInputRef.current.value = null;
         } catch (error) {
             console.error("Error encoding image:", error);
             alert("Error encoding image. Please try again later.");
-        } finally {
-            setProcessingImage(false);
         }
     };
+
+    useEffect(() => {
+        if (id) {
+            getProduct(id).then((response) => {
+                setProduct({
+                    ...product,
+                    name: response.data.name,
+                    image: response.data.image,
+                    price: response.data.price,
+                    description: response.data.description
+                });
+            }).catch(error => {
+                console.error(error);
+            });
+        }
+    }, [id]);
 
     return (
         <div className="container">

@@ -44,6 +44,7 @@ const UserForm = ({ userData, handleUserDataChange, handleSubmit }) => (
                 type: "text",
                 name: "zipCode",
                 value: userData.zipCode,
+
             },
         ]}
         handleDataChange={handleUserDataChange}

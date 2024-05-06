@@ -58,7 +58,7 @@ const ListProductsComponent = () => {
     }
 
     function update(id) {
-
+        navigator(`/edit-product/${id}`);
     }
 
     function delete_(id) {
