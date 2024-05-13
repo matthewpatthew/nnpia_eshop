@@ -1,6 +1,4 @@
-import React from "react";
-
-const FormComponent = ({formData, handleDataChange, handleSubmit}) => {
+const FormComponent = ({ formData, handleDataChange, handleSubmit, formErrors }) => {
     return (
         <>
             <br/>
@@ -16,6 +14,9 @@ const FormComponent = ({formData, handleDataChange, handleSubmit}) => {
                                 value={field.value || ""}
                                 onChange={(e) => handleDataChange(e, field.name)}
                             />
+                            {formErrors[field.name] && (
+                                <div className="text-danger">{formErrors[field.name]}</div>
+                            )}
                         </div>
                     ))}
                     <div className="d-flex justify-content-center align-items-center mb-3">

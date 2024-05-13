@@ -167,7 +167,7 @@ const AppUserFormComponent = () => {
 
         if (!isAdmin()) {
             if (!validator.isStrongPassword(userData.password.trim())) {
-                errorsCopy.password = "Weak password";
+                errorsCopy.password = "Weak password (use at least eight characters, including one uppercase letter and a special character";
                 valid = false;
             } else {
                 errorsCopy.password = "";
@@ -256,7 +256,7 @@ const AppUserFormComponent = () => {
                         {!loggedIn &&
                             <div className="mb-3">
                                 <label className="form-label">Password</label>
-                                <input type="text"
+                                <input type="password"
                                        className={`form-control ${errors.password ? "is-invalid" : ""}`}
                                        value={userData.password || ""}
                                        onChange={(e) => handleInputChange("password", e.target.value)}/>

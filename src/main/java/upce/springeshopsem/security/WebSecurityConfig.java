@@ -64,7 +64,7 @@ public class WebSecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://127.0.0.1:3000")); // Povolený zdroj
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Povolené metody
-        configuration.setAllowedHeaders(Arrays.asList("*")); // Povolené hlavičky (Content-Type, Authorization..) idk jaké
+        configuration.setAllowedHeaders(Arrays.asList("*")); // Povolené hlavičky (Content-Type, Authorization..)
         configuration.setAllowCredentials(true); // Povolit cookies při CORS
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

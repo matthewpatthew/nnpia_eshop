@@ -6,7 +6,7 @@ import {updateAppUser} from "../services/AppUserService.jsx";
 import {createPurchase} from "../services/PurchaseService.jsx";
 import {useNavigate} from "react-router-dom";
 import useUserData from "../hooks/useUserData.jsx";
-import UserForm from "../hooks/UserForm.jsx";
+import UserAddressForm from "../hooks/userAddressForm.jsx";
 
 const PurchaseComponent = () => {
 
@@ -48,7 +48,7 @@ const PurchaseComponent = () => {
             <br/>
             <div className="col-md-3 offset-md-5">
                 <h5 className="heading text-center">Purchase details</h5>
-                <UserForm
+                <UserAddressForm
                     userData={userData}
                     handleUserDataChange={handleUserDataChange}
                     handleSubmit={handleSubmit}

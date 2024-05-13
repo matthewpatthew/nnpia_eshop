@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 import useUserData from "../hooks/useUserData.jsx";
 import {updateAppUser} from "../services/AppUserService.jsx";
 import {updateAddress} from "../services/AddressService.jsx";
-import UserForm from "../hooks/UserForm.jsx";
+import UserAddressForm from "../hooks/userAddressForm.jsx";
 import {listProducts} from "../services/ProductService.jsx";
 import {listPurchases} from "../services/PurchaseService.jsx";
 
@@ -49,7 +49,7 @@ const ProfileComponent = () => {
                 <div className="col-md-4">
                     <br/>
                     <h2 className="text-center heading">User Information</h2>
-                    <UserForm
+                    <UserAddressForm
                         userData={userData}
                         handleUserDataChange={handleUserDataChange}
                         handleSubmit={handleSubmit}
